@@ -12,18 +12,24 @@
   TODO: Easy Mode: QLearning outputs one of 4 actions corresponding to the direction it should drive to
         Hard Mode: QLearning ouputs outputs speed and direction of the spinning of the motors
 */
-#include "Vehicle.cpp"
+#include "Vehicle.h"
 
-Vehicle trackVehicle;
+
+Vehicle v;
 
 void setup() {
-  
-  Vehicle trackVehicle();
+
+
 }
 
 void loop() {
 
-  trackVehicle.readSensors();
+  //v.readSensors();
+  //v.forwards();
+  //v.reverse();
+  for (int i = 0; i < 300; i++) {
+    //v.turnLeft(i);
+  }
 
 }
 
