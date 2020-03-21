@@ -1,3 +1,7 @@
+//TODO: Organize in a OOP Module
+//TODO: Connect to serial port arduino
+//TODO: Use wireless connection
+
 import processing.serial.*;
 
 Serial myPort;
@@ -6,7 +10,7 @@ float inByte = 0;
 String[] sensorData;
 
 ArrayList<PVector> sensorLeft; 
-ArrayList<PVector> sensorMid; 
+ArrayList<PVector> sensorMid;   
 ArrayList<PVector> sensorRight; 
 
 PVector vehicle;
@@ -17,7 +21,7 @@ int vehicleWidth;
 int vehicleHeight;
 
 float zoom;
-
+  
 float scale;
 float xPan;
 float yPan;
