@@ -31,10 +31,6 @@ class Radar {
     zoomSpeed= 1.2;
   }
 
-
-  /*
-Draws the green circles on the background of the radar
-   */
   void drawBackground() {
     background(0);
     stroke(115, 243, 64);
@@ -66,11 +62,11 @@ Draws the green circles on the background of the radar
     }
 
     strokeWeight(2);
-    /* Center lines */
+    //***** Center lines  *****
     line(0, -height, 0, height);
     line(-width, 0, width, 0 );
 
-    /* set the starting point of polar coordinates to the front */
+    //***** start of polar coordinates to the front ********
     rotate(radians(-180));
 
     for (int j=0; j<360; j++) {
@@ -167,7 +163,7 @@ Draws the green circles on the background of the radar
   void mouseWheel(MouseEvent event) {
     float e = event.getCount()*0.9;
     //zoom=e;
-    println("e: " +e);
+    //println("e: " +e);
     //println("zoom: "+zoom);
   }
 }

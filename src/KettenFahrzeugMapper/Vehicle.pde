@@ -4,7 +4,7 @@ class Vehicle {
 
   PVector position;
 
-  Serial myPort;
+  Serial port;
 
   String[] sensorData;
 
@@ -14,9 +14,12 @@ class Vehicle {
 
   int vehicleWidth;
   int vehicleHeight;
+  
+  PApplet ref;
 
-  Vehicle() {
+  Vehicle(PApplet pa) {
 
+    ref = pa;
     vehicleWidth = 40;
     vehicleHeight = 60;
     position = new PVector(0, 0);
@@ -29,26 +32,24 @@ class Vehicle {
 
     //Test data
     data();
-
+    
     //open ports
-    //myPort = new Serial(Serial.list()[1], 9600);
+    port = new Serial(ref, Serial.list()[0], 9600);
+    //port.bufferUntil('\n')
     //serialEvent(myPort);
   }
 
-  void serialEvent (Serial myPort) {
+  void serialEvent () {
 
     //get the ASCII string; Read bytes up to linebreak
-    String inString = myPort.readStringUntil('\n');
-    print("serialevent: ");
-    print(inString);
+    String inString = this.port.readStringUntil('\n');
+    print("Reading:__ ");
+    println(inString);
 
     sensorData = inString.split(":");
-
-    /*
-   sensorLeft.add(sensorData[0]);
-     sensorMid.add(sensorData[1]);
-     sensorRight.add(sensorData[2]);
-     */
+    //sensorLeft.add(new PVector(double(sensorData[0])));
+    //sensorMid.add(sensorData[1]);
+    //sensorRight.add(sensorData[2]);
   }
 
   void drawVehicle() {

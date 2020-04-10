@@ -47,7 +47,7 @@ void Vehicle::readSensors()
   // Clears the trigPin
   //Serial.print("Sonar left: ");
   //float measurements= [];
-
+/*
   Serial.print(sLeft.ping_cm());
   Serial.print("\n");
 
@@ -60,6 +60,15 @@ void Vehicle::readSensors()
   Serial.print("\n");
 
   delay(500);
+
+  */
+  Serial.print(sLeft.ping_cm());
+  Serial.print(":");
+  Serial.print(sMid.ping_cm());
+  Serial.print(":");
+  Serial.print(sRight.ping_cm());
+  Serial.print("\n");
+  
 }
 
 void Vehicle::forwards() {
