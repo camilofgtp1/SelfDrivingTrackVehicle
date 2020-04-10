@@ -12,8 +12,9 @@ class Vehicle {
     int getObservation();
     void forwards();
     void reverse();
-    void turnLeft(int vSpeed);
-    void turnRight();
+    void turnLeft(int turningTime, int turnSpeed);
+    void turnRight(int turningTime, int turnSpeed);
+    void fullStop();
     void testTurning();
     void demoMotors();
 

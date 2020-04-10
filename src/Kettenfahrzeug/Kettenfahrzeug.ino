@@ -14,23 +14,24 @@
 */
 #include "Vehicle.h"
 
-
 Vehicle v;
+//char[] ssid= {"U", "P""C""B""7"762F4};
+//char[] pass;
+int var;
 
 void setup() {
-
-
+  Serial.begin(9600);
 }
 
 void loop() {
 
-  //v.readSensors();
   //v.forwards();
   //v.reverse();
-  for (int i = 0; i < 300; i++) {
-    //v.turnLeft(i);
-  }
-
+  //time mms, speed PWM
+  //v.turnLeft(1000, 120);
+  //v.turnRight(1000, 120);
+  v.readSensors();
+ 
 }
 
 /*Q learning:
@@ -46,7 +47,7 @@ void loop() {
   we could limit the possible speeds  between 120 and 200
 
   first stage:
-  it can move backwards in a straigh line away from an obstacle
+  it can move backwards in a straigh line towards an obstacle?
 
   second stage:
   if can turn left and right

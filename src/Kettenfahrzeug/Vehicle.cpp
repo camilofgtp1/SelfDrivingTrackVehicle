@@ -31,8 +31,6 @@ Vehicle::Vehicle() :
   sRight(TRIGGER_RIGHT, ECHO_RIGHT, MAX_DISTANCE)
 {
   /*
-
-
     pinMode(MOTOR_LEFT_ENABLE, OUTPUT);
     pinMode(MOTOR_LEFT_INPUT1, OUTPUT);
     pinMode(MOTOR_LEFT_INPUT2, OUTPUT);
@@ -50,8 +48,6 @@ void Vehicle::readSensors()
   //Serial.print("Sonar left: ");
   //float measurements= [];
 
-  Serial.begin(9600);
-
   Serial.print(sLeft.ping_cm());
   Serial.print("\n");
 
@@ -62,8 +58,6 @@ void Vehicle::readSensors()
   //Serial.print("Sonar right: ");
   Serial.print(sRight.ping_cm());
   Serial.print("\n");
-
-  double sonarData[3];
 
   delay(500);
 }
@@ -78,7 +72,6 @@ void Vehicle::forwards() {
 
   analogWrite(MOTOR_LEFT_ENABLE, VEHICLE_SPEED);
   analogWrite(MOTOR_RIGHT_ENABLE, VEHICLE_SPEED);
-
 }
 
 void Vehicle::reverse() {
@@ -96,34 +89,48 @@ void Vehicle::reverse() {
 //TODO: make this so it turn only 10 degrees at constant speed or a given angle
 
 
-void Vehicle::turnLeft(int t) {
+void Vehicle::turnLeft(int turningTime, int turnSpeed) {
 
-    digitalWrite(MOTOR_LEFT_INPUT1, HIGH);
-    digitalWrite(MOTOR_LEFT_INPUT2, LOW);
+  digitalWrite(MOTOR_LEFT_INPUT1, HIGH);
+  digitalWrite(MOTOR_LEFT_INPUT2, LOW);
 
-    digitalWrite(MOTOR_RIGHT_INPUT1, LOW);
-    digitalWrite(MOTOR_RIGHT_INPUT2, HIGH);
+  digitalWrite(MOTOR_RIGHT_INPUT1, LOW);
+  digitalWrite(MOTOR_RIGHT_INPUT2, HIGH);
 
-    analogWrite(MOTOR_LEFT_ENABLE, VEHICLE_SPEED);
-    analogWrite(MOTOR_RIGHT_ENABLE, VEHICLE_SPEED );
-    delay(5000);
-  
+  analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
+  analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
+  delay(turningTime);
+  fullStop();
 }
 
-/*
-
-  //TODO: turn 10 degrees
-  void Vehicle::turnRight() {
+//TODO: turn 10 degrees
+void Vehicle::turnRight(int turningTime, int turnSpeed) {
   digitalWrite(MOTOR_LEFT_INPUT1, LOW);
   digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
 
   digitalWrite(MOTOR_RIGHT_INPUT1, HIGH);
   digitalWrite(MOTOR_RIGHT_INPUT2, LOW);
 
-  analogWrite(MOTOR_LEFT_ENABLE, VEHICLE_SPEED);
-  analogWrite(MOTOR_RIGHT_ENABLE, VEHICLE_SPEED);
+  analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
+  analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
+  delay(turningTime);
+  fullStop();
+}
 
-  }
+void Vehicle::fullStop() {
+
+  digitalWrite(MOTOR_LEFT_INPUT1, LOW);
+  digitalWrite(MOTOR_LEFT_INPUT2, LOW);
+
+  digitalWrite(MOTOR_RIGHT_INPUT1, LOW);
+  digitalWrite(MOTOR_RIGHT_INPUT2, LOW);
+
+  analogWrite(MOTOR_LEFT_ENABLE, 0);
+  analogWrite(MOTOR_RIGHT_ENABLE, 0 );
+}
+
+
+/*
   //try different turning speeds
   void Vehicle::testTurningRight() {
 
@@ -146,15 +153,15 @@ void Vehicle::turnLeft(int t) {
   for (int i = 130; i < 2550; i++) {
 
   if (i % 2 == 0) {
-    delay(6000);
-    Serial.print("left  \n");
-    analogWrite(MOTOR_LEFT_ENABLE, i);
-    analogWrite(MOTOR_RIGHT_ENABLE, 0);
+  delay(6000);
+  Serial.print("left  \n");
+  analogWrite(MOTOR_LEFT_ENABLE, i);
+  analogWrite(MOTOR_RIGHT_ENABLE, 0);
   } else {
-    delay(6000);
-    Serial.print("right \n");
-    analogWrite(MOTOR_LEFT_ENABLE, 0);
-    analogWrite(MOTOR_RIGHT_ENABLE, i);
+  delay(6000);
+  Serial.print("right \n");
+  analogWrite(MOTOR_LEFT_ENABLE, 0);
+  analogWrite(MOTOR_RIGHT_ENABLE, i);
   }
   }
   }
