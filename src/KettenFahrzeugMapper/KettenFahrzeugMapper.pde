@@ -1,4 +1,3 @@
-//TODO: Organize in a OOP Mode
 //TODO: Connect to serial port arduino
 //TODO: Use wireless connection
 
@@ -12,37 +11,18 @@ ArrayList sensorRight =new ArrayList<PVector>();
 Vehicle vehicle;
 
 void setup () {
-
-vehicle = new Vehicle(this);
-
-vehicle.port.bufferUntil('\n');
-
-//print available serial ports
-  printArray(Serial.list());
+  vehicle = new Vehicle(this);
 }
 
 void draw () {
 
-}
-
-void serialEvent (Serial myPort) {
-
-  //get the ASCII string; Read bytes up to linebreak
-  String inString = myPort.readStringUntil('\n');
-  print("serialevent: ");
-  print(inString);
-
-  sensorData = inString.split(":");
-
-   sensorLeft.add(sensorData[0]);
-   sensorMid.add(sensorData[1]);
-   sensorRight.add(sensorData[2]);
+  vehicle.serialEvent();
 
 }
 
 void data() {
 
-  //generate random data
+  //generate data
   sensorLeft.add(new PVector(10, this.vehicle.position.y));
   sensorLeft.add(new PVector(20, this.vehicle.position.y));
   sensorLeft.add(new PVector(30, this.vehicle.position.y));

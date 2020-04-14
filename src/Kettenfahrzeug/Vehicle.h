@@ -10,8 +10,10 @@ class Vehicle {
     void readSensors();
     int perform(int& action);
     int getObservation();
-    void forwards();
-    void reverse();
+    void forwards(int time);
+    void reverse(int time);
+    void left(int turningTime, int turnSpeed);
+    void right(int turningTime, int turnSpeed);
     void turnLeft(int turningTime, int turnSpeed);
     void turnRight(int turningTime, int turnSpeed);
     void fullStop();

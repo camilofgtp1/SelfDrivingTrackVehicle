@@ -3,9 +3,7 @@ import processing.serial.*;
 class Vehicle {
 
   PVector position;
-
   Serial port;
-
   String[] sensorData;
 
   ArrayList<PVector> sensorLeft; 
@@ -14,7 +12,6 @@ class Vehicle {
 
   int vehicleWidth;
   int vehicleHeight;
-  
   PApplet ref;
 
   Vehicle(PApplet pa) {
@@ -30,24 +27,21 @@ class Vehicle {
 
     printArray(Serial.list());
 
-    //Test data
-    data();
-    
     //open ports
-    port = new Serial(ref, Serial.list()[0], 9600);
-    //port.bufferUntil('\n')
-    //serialEvent(myPort);
-  }
+    port = new Serial(ref, Serial.list()[3], 9600);
+    port.bufferUntil('\n');
+    port.clear();
+
+}
 
   void serialEvent () {
 
-    //get the ASCII string; Read bytes up to linebreak
-    String inString = this.port.readStringUntil('\n');
-    print("Reading:__ ");
-    println(inString);
-
-    sensorData = inString.split(":");
-    //sensorLeft.add(new PVector(double(sensorData[0])));
+    String inString = port.readStringUntil('\n');
+   
+    if(inString != null){
+      sensorData = inString.split(":");  
+    }
+    //sensorLeft.add(new PVector(float(sensorData[0])));
     //sensorMid.add(sensorData[1]);
     //sensorRight.add(sensorData[2]);
   }
@@ -62,15 +56,15 @@ class Vehicle {
     translate(width/2, height/2);
 
     rectMode(CENTER);
-    
-    
+
+
     fill(123);
 
     //track left
-    rect(position.x-(vehicleWidth*0.42), position.y, vehicleWidth/3, vehicleHeight*0.8,  5);
+    rect(position.x-(vehicleWidth*0.42), position.y, vehicleWidth/3, vehicleHeight*0.8, 5);
 
     //track right
-    rect(position.x + (vehicleWidth*0.42), position.y, vehicleWidth/3, vehicleHeight*0.8,  5);
+    rect(position.x + (vehicleWidth*0.42), position.y, vehicleWidth/3, vehicleHeight*0.8, 5);
 
     //carosserie
     fill(26, 63, 92);
@@ -89,7 +83,7 @@ class Vehicle {
       translate(width/2, height/2);
       circle(x, y, markerSize);
       popMatrix();
-    }  
+    }
   }
 
   //x is the vehicle position, y is the negative sensor measurement

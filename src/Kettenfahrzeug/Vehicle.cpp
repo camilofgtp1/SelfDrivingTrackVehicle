@@ -1,5 +1,3 @@
-//#include <Drive.h>  TODO: Appy library
-
 #include "Vehicle.h"
 #include <NewPing.h>
 
@@ -47,31 +45,18 @@ void Vehicle::readSensors()
   // Clears the trigPin
   //Serial.print("Sonar left: ");
   //float measurements= [];
-/*
-  Serial.print(sLeft.ping_cm());
-  Serial.print("\n");
 
-  //Serial.print("Sonar mid: ");
-  Serial.print(sMid.ping_cm());
-  Serial.print("\n");
-
-  //Serial.print("Sonar right: ");
-  Serial.print(sRight.ping_cm());
-  Serial.print("\n");
-
-  delay(500);
-
-  */
   Serial.print(sLeft.ping_cm());
   Serial.print(":");
   Serial.print(sMid.ping_cm());
   Serial.print(":");
   Serial.print(sRight.ping_cm());
   Serial.print("\n");
+  delay(1000);
   
 }
 
-void Vehicle::forwards() {
+void Vehicle::forwards(int turningTime) {
 
   digitalWrite(MOTOR_LEFT_INPUT1, LOW);
   digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
@@ -81,9 +66,11 @@ void Vehicle::forwards() {
 
   analogWrite(MOTOR_LEFT_ENABLE, VEHICLE_SPEED);
   analogWrite(MOTOR_RIGHT_ENABLE, VEHICLE_SPEED);
+  delay(turningTime);
+  fullStop();
 }
 
-void Vehicle::reverse() {
+void Vehicle::reverse(int turningTime) {
 
   digitalWrite(MOTOR_LEFT_INPUT1, HIGH);
   digitalWrite(MOTOR_LEFT_INPUT2, LOW);
@@ -93,11 +80,26 @@ void Vehicle::reverse() {
 
   analogWrite(MOTOR_LEFT_ENABLE, VEHICLE_SPEED);
   analogWrite(MOTOR_RIGHT_ENABLE, VEHICLE_SPEED);
+  delay(turningTime);
+  fullStop();
 }
 
-//TODO: make this so it turn only 10 degrees at constant speed or a given angle
+void Vehicle::left(int turningTime, int turnSpeed) {
 
+    digitalWrite(MOTOR_LEFT_INPUT1, LOW);
+    digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
+    analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
+    delay(turningTime);
+    fullStop();
+}
+void Vehicle::right(int turningTime, int turnSpeed) {
 
+    digitalWrite(MOTOR_RIGHT_INPUT1, LOW);
+    digitalWrite(MOTOR_RIGHT_INPUT2, HIGH);
+    analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
+    delay(turningTime);
+    fullStop();
+}
 void Vehicle::turnLeft(int turningTime, int turnSpeed) {
 
   digitalWrite(MOTOR_LEFT_INPUT1, HIGH);
@@ -112,7 +114,7 @@ void Vehicle::turnLeft(int turningTime, int turnSpeed) {
   fullStop();
 }
 
-//TODO: turn 10 degrees
+//TODO: angle control
 void Vehicle::turnRight(int turningTime, int turnSpeed) {
   digitalWrite(MOTOR_LEFT_INPUT1, LOW);
   digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
@@ -140,21 +142,6 @@ void Vehicle::fullStop() {
 
 
 /*
-  //try different turning speeds
-  void Vehicle::testTurningRight() {
-
-  for (int i = 0; i < 10; i++) {
-  digitalWrite(MOTOR_LEFT_INPUT1, LOW);
-  digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
-
-  digitalWrite(MOTOR_RIGHT_INPUT1, HIGH);
-  digitalWrite(MOTOR_RIGHT_INPUT2, LOW);
-
-  analogWrite(MOTOR_LEFT_ENABLE, VEHICLE_SPEED);
-  analogWrite(MOTOR_RIGHT_ENABLE, VEHICLE_SPEED);
-  }
-  }
-
   void Vehicle::demoMotors() {
 
   //HIGH or Low sets the direction
@@ -179,11 +166,8 @@ void Vehicle::fullStop() {
   VEHICLE_SPEED = newSpeed;
   }
 
-
   An action [0, 0, 0, 0] -> forwards, backwards, left, right
   the action is executed if the value is 1, then it returns a reward
-
-
 
   int Vehicle::perform(int *action) {
   int reward;

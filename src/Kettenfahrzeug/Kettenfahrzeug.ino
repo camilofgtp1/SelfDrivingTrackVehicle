@@ -13,53 +13,73 @@
         Hard Mode: QLearning ouputs outputs speed and direction of the spinning of the motors
 */
 #include "Vehicle.h"
+#include "Q.h"
 
 Vehicle v;
-//char[] ssid= {"U", "P""C""B""7"762F4};
-//char[] pass;
-int var;
+Q q;
+
+int steps = 20;
+float measurements[20];
+float leftMotor[20];
+float rightMotor[20];
+float turningTimes[20];
+float turningSpeeds[20];
 
 void setup() {
   Serial.begin(9600);
+  q.randomMeasurements(measurements, steps);
+  q.randomMotor(leftMotor, steps);
+  q.randomMotor(rightMotor, steps);
+  q.randomSpeeds(turningSpeeds, steps);
+  q.randomTimes(turningTimes, steps);
+
+  //Serial.println("measurements");
+  //q.printArr(measurements, steps);
+  
+  Serial.println("right motor: ");
+  q.printArr(rightMotor, steps);
+  
+  Serial.println("left motor: ");
+  q.printArr(leftMotor, steps);
+
+  Serial.println("turning times: ");
+  q.printArr(turningTimes, steps);
+
+  Serial.println("turning speeds");
+  q.printArr(turningSpeeds, steps);
+
 }
 
 void loop() {
 
-  //v.forwards();
-  //v.reverse();
-  //time mms, speed PWM
-  //v.turnLeft(1000, 120);
-  //v.turnRight(1000, 120);
-  v.readSensors();
- 
+  for (int i = 0; i < steps; i++) {
+    if (leftMotor[i] == 1.00 && rightMotor[i] == 0.00) {
+      Serial.println("left: ");
+      Serial.print("speed: ");
+      Serial.println(turningSpeeds[i]);
+      Serial.print("time: ");
+      Serial.println(turningTimes[i]);
+      v.left(turningTimes[i], turningSpeeds[i]);
+    }
+
+    if (leftMotor[i] == 0.00 && rightMotor[i] == 1.00) {
+      Serial.println("right: ");
+      Serial.print("speed: ");
+      Serial.println(turningSpeeds[i]);
+      Serial.print("time: ");
+      Serial.println(turningTimes[i]);
+      v.right(turningTimes[i], turningSpeeds[i]);
+    }
+    if (rightMotor[steps] == 1.00 && leftMotor[i] == 1.00) {
+      Serial.println("both");
+      Serial.print("speed: ");
+      Serial.println(turningSpeeds[i]);
+      Serial.print("time: ");
+      Serial.println(turningTimes[i]);
+      v.left(turningTimes[i], turningSpeeds[i]);
+      v.right(turningTimes[i], turningSpeeds[i]);
+    }
+    Serial.println(i);
+  }
+
 }
-
-/*Q learning:
-  The Agent has two motor which can be turn on both directions
-  All the possible actions for a controlled vehicle at constant speed for:
-  forward();
-  reverser();
-  turnLeft(); -10 degrees at the time, but  ideally with any given negative angle
-  turnRight(); +10 degrees or any positive angle
-
-  The agent has different learnable actions
-
-  we could limit the possible speeds  between 120 and 200
-
-  first stage:
-  it can move backwards in a straigh line towards an obstacle?
-
-  second stage:
-  if can turn left and right
-
-  third:
-  it can move freely with no sense of direction but avoids obstacles and reverses if it finds caught on a close end
-
-  fourth:
-  it maps the entire room avoiding collisions, looks actively for blind spots
-
-  Orientation:
-  it could be done by setting the turning
-
-
-*/

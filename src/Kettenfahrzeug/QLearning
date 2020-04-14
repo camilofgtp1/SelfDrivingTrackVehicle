@@ -1,4 +1,35 @@
 
+/*Q learning:
+  The Agent has two motor which can be turn on both directions
+  All the possible actions for a controlled vehicle at constant speed for:
+  forward();
+  reverser();
+  turnLeft(); -10 degrees at the time, but  ideally with any given negative angle
+  turnRight(); +10 degrees or any positive angle
+
+  The agent has different learnable actions
+
+  we could limit the possible speeds  between 120 and 200
+
+  first stage:
+  it can move backwards in a straigh line towards an obstacle?
+
+  second stage:
+  if can turn left and right
+
+  third:
+  it can move freely with no sense of direction but avoids obstacles and reverses if it finds caught on a close end
+
+  fourth:
+  it maps the entire room avoiding collisions, looks actively for blind spots
+
+  Orientation:
+  it could be done by setting the turning
+
+*/
+
+
+
 int learningRate = 0.003;
 
 //How many steps; 2 per second to move for 1 minutes
