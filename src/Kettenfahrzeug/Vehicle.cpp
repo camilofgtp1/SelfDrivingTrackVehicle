@@ -143,3 +143,8 @@ void Vehicle::fullStop() {
   analogWrite(MOTOR_LEFT_ENABLE, 0);
   analogWrite(MOTOR_RIGHT_ENABLE, 0 );
 }
+
+//TODO: Implement performAction, which returns the reward
+void Vehicle::performAction() {
+
+}

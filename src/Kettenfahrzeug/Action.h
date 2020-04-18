@@ -3,6 +3,13 @@
 
 class Action {
 
+public:
+    int motorLeftDirection;
+    int motorRightDirection;
+    int turningTimeLeft;
+    int turningTimeRight;
+    int PWMLeft;
+    int PWMRight;
 };
 
 

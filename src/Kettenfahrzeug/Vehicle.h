@@ -7,17 +7,16 @@ class Vehicle {
 
   public:
     Vehicle();
-    void sendToMapper();
-    int perform(int& action);
-    int getObservation();
-    
-    void forwards(int time, int turnSpeed);
-    void reverse(int time, int turnSpeed);
-    
-    void left(int turningTime, int turnSpeed);
-    void right(int turningTime, int turnSpeed);
 
+    float performAction();
+    void forwards(int time, int turnSpeed);
+
+    void reverse(int time, int turnSpeed);
+    void left(int turningTime, int turnSpeed);
+
+    void right(int turningTime, int turnSpeed);
     float getLeftDistance();
+
     float getMidDistance();
     float getRightDistance();
     void turnLeft(int turningTime, int turnSpeed);
@@ -25,6 +24,7 @@ class Vehicle {
     void fullStop();
     void testTurning();
     void demoMotors();
+    void sendToMapper();
 
   private:
     NewPing sLeft, sMid, sRight;
