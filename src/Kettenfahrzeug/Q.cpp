@@ -45,13 +45,13 @@ void Q::randomMotor(float arr[], int duration){
 
 void Q::randomSpeeds(float arr[], int duration){
   for (int i = 0; i < duration; i++) {
-    arr[i] = float(random(80, 255));
+    arr[i] = float(random(80, 256));
   }
 }
 
 void Q::randomTimes(float arr[], int duration){
   for (int i = 0; i < duration; i++) {
-    arr[i] = (random(100, 1000));
+    arr[i] = (random(200, 2000));
   }
 }
 
@@ -62,4 +62,8 @@ void Q::printArr(float arr[], int arrayLength) {
     Serial.println(arr[i]);
   }
   Serial.println("___");
+}
+
+void getAction(){
+
 }

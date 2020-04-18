@@ -18,10 +18,6 @@
 
 #define TRIGGER_RIGHT 3
 #define ECHO_RIGHT 2
-#define VEHICLE_SPEED 125
-
-//todo: adapt constructor to use initialization list.
-//see: https://en.cppreference.com/w/cpp/language/initializer_list
 
 Vehicle::Vehicle() :
   sLeft(TRIGGER_LEFT, ECHO_LEFT, MAX_DISTANCE),
@@ -56,7 +52,7 @@ void Vehicle::readSensors()
   
 }
 
-void Vehicle::forwards(int turningTime) {
+void Vehicle::forwards(int turningTime, int turnSpeed) {
 
   digitalWrite(MOTOR_LEFT_INPUT1, LOW);
   digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
@@ -64,13 +60,13 @@ void Vehicle::forwards(int turningTime) {
   digitalWrite(MOTOR_RIGHT_INPUT1, LOW);
   digitalWrite(MOTOR_RIGHT_INPUT2, HIGH);
 
-  analogWrite(MOTOR_LEFT_ENABLE, VEHICLE_SPEED);
-  analogWrite(MOTOR_RIGHT_ENABLE, VEHICLE_SPEED);
+  analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
+  analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
   delay(turningTime);
   fullStop();
 }
 
-void Vehicle::reverse(int turningTime) {
+void Vehicle::reverse(int turningTime, int turnSpeed) {
 
   digitalWrite(MOTOR_LEFT_INPUT1, HIGH);
   digitalWrite(MOTOR_LEFT_INPUT2, LOW);
@@ -78,8 +74,8 @@ void Vehicle::reverse(int turningTime) {
   digitalWrite(MOTOR_RIGHT_INPUT1, HIGH);
   digitalWrite(MOTOR_RIGHT_INPUT2, LOW);
 
-  analogWrite(MOTOR_LEFT_ENABLE, VEHICLE_SPEED);
-  analogWrite(MOTOR_RIGHT_ENABLE, VEHICLE_SPEED);
+  analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
+  analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
   delay(turningTime);
   fullStop();
 }
@@ -139,61 +135,3 @@ void Vehicle::fullStop() {
   analogWrite(MOTOR_LEFT_ENABLE, 0);
   analogWrite(MOTOR_RIGHT_ENABLE, 0 );
 }
-
-
-/*
-  void Vehicle::demoMotors() {
-
-  //HIGH or Low sets the direction
-
-  for (int i = 130; i < 2550; i++) {
-
-  if (i % 2 == 0) {
-  delay(6000);
-  Serial.print("left  \n");
-  analogWrite(MOTOR_LEFT_ENABLE, i);
-  analogWrite(MOTOR_RIGHT_ENABLE, 0);
-  } else {
-  delay(6000);
-  Serial.print("right \n");
-  analogWrite(MOTOR_LEFT_ENABLE, 0);
-  analogWrite(MOTOR_RIGHT_ENABLE, i);
-  }
-  }
-  }
-
-  void Vehicle::setSpeed(int newSpeed) {
-  VEHICLE_SPEED = newSpeed;
-  }
-
-  An action [0, 0, 0, 0] -> forwards, backwards, left, right
-  the action is executed if the value is 1, then it returns a reward
-
-  int Vehicle::perform(int *action) {
-  int reward;
-
-  if (action[0] == 1) {
-  forwards();
-  }
-  if (action[1] == 1) {
-  reverse();
-  }
-  if (action[2] == 1) {
-  turnLeft();
-  }
-  if (action[3] == 1) {
-  turnRight();
-  }
-
-  return reward;
-
-  }
-
-  int Vehicle::getObservation() {
-
-  int obs[3] = {sLeft.ping_cm(), sMid.ping_cm(), sRight.ping_cm()};
-
-  return obs;
-  }
-
-*/

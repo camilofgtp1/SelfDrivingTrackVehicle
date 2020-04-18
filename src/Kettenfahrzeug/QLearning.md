@@ -1,52 +1,48 @@
-
-/*Q learning:
-  The Agent has two motor which can be turn on both directions
-  All the possible actions for a controlled vehicle at constant speed for:
-  forward();
-  reverser();
-  turnLeft(); -10 degrees at the time, but  ideally with any given negative angle
-  turnRight(); +10 degrees or any positive angle
-
-  The agent has different learnable actions
-
-  we could limit the possible speeds  between 120 and 200
-
-  first stage:
-  it can move backwards in a straigh line towards an obstacle?
-
-  second stage:
-  if can turn left and right
-
-  third:
-  it can move freely with no sense of direction but avoids obstacles and reverses if it finds caught on a close end
-
-  fourth:
-  it maps the entire room avoiding collisions, looks actively for blind spots
-
-  Orientation:
-  it could be done by setting the turning
-
-*/
+Open todos:
+Blogpost with python examples and theory
+https://alaurans.com/blog/reinforcement-learning-from-scratch-to-deep-q-network
+https://www.learndatasci.com/tutorials/reinforcement-q-learning-scratch-python-openai-gym/
 
 
+//TODO: observation and step taking on a method? if not difficult
+//TODO: Neural Network class QLearning is supposed to be passed to a neural network for it to learn to apply the learned behaviour dynamically
+                              check out Arduino NN Library: https://github.com/GiorgosXou/NeuralNetworks
+                              
+//TODO: Vehicle function to take and action and recieve the reward
+//TODO: Save sessions to text file? is it doable?
+//TODO: refactor Q array to be multidimensional, at least Q[State][Actions]
+
+
+Q learning:
+The Agent has two motors which can be turn on both directions at different speeds:
+Actions:
+left motor, time, speed, //TODO: direction
+right motor, time, speed, //TODO: directions
+//TODO: Servo with Ultrasonic sensor, rotationAngle //TODO: Mount ultrasonic sensor on a turrent
+
+States , Environment observations:
+Measurements from ultrasonic sensors. Current 3 Sensors, //TODO: 2 to be removed
+
+//TODO: add Compass module which will add more observations 
+
+
+--------------------------
 
 int learningRate = 0.003;
 
-//How many steps; 2 per second to move for 1 minutes
-int goalSteps = 100;
+//2 steps per second to move for 1 minutes
+int steps = 100;
 
-//distance travelled as a goal; mm vs mts?
-int travelledDistance = 5000 ;
+//goal = distances from wall
+int goal = 10 ;
 int initialRuns = 10000;
 
 Vehicle vehicle;
-
 
 float gamma = 0.75;
 float alpha = 0.1;
 float epsilon;
 
-//sequence of randomly generated action
 void initialPopulation() {
 
   //2D Array with the actions
@@ -71,7 +67,7 @@ void initialPopulation() {
       vehicle.perform(action);
 
       /*
-        Based on last action, do one step, return environment observation, acquired reward for that action.
+        Based on last action, do one step, return environment observation, acquire reward for that action.
         observation, reward, isDone, info = environment.step(action)
       */
 
@@ -91,12 +87,13 @@ void initialPopulation() {
     }
   }
 
-  if (score >= scoreRequirement) {
-    //acceptedScore.append(score);
+  if (measurement >= goal) { //save it somewhere
+  
     for (int i = 0; i < memory.length; i++) {
       //int[] output= {0,0};
       //get the actions from the memory to implement them in the controller
-      /* if (memory[1] == 1) {   //actions in memory come in pairs
+     
+       if (memory[1] == 1) {   //actions in memory come in pairs
         output = [0, 1];  //e.x:  move right
         } else if (memory[1] == 0) {
         output = [1, 0]; //e.x: move left
@@ -104,32 +101,16 @@ void initialPopulation() {
         output = [0, 0]; //dont move
         }
 
-      */
-
       //trainingData.append([memory[0], output]);
     }
     //reset environment
     score.append(score);
   }
 
-  //save training data in an  external text file
-
-  // print average accepted score
-  //print median accepted scores
-  // print count accepted scores
-
   //return training data
 
 }
-
-/*
- * 
- * 
- * QLearning is supposed to be passed to a neural network for it to learn to apply the learned behaviour dynamically
- * check out Arduino NN Library: https://github.com/GiorgosXou/NeuralNetworks
- * 
- * 
- * 
+ 
    Naive Q-Learning
    _______________
 
@@ -163,10 +144,23 @@ void initialPopulation() {
   q_target = dense(states_next, [32, 32, 2], name='Q_target')
 
 
-
-  https://github.com/AlekseyZhelo/pytorch-rl/blob/master/core/agents/dqn.py
-
-  https://alaurans.com/blog/reinforcement-learning-from-scratch-to-deep-q-network
-
-  https://www.learndatasci.com/tutorials/reinforcement-q-learning-scratch-python-openai-gym/
- * */
+DQN Step by step: 
+initialize replay memory
+initialize policy network with random weights
+clone network and call it target network
+for each episode:
+    initialize the starting state
+    for each time step:
+        select an action
+            via exploration or exploitation
+        execute selected action in an emulator
+        observe reward and next state
+        store experience in replay memory
+        sample random batch from replay memory
+        preprocess states from batch
+        pass batch of preprocessed states to policy network
+        calculate loss between ouput Q values and target Q values
+            requires a pass to the target network for the next state
+        gradient descent updates weights in the policy network to minimize loss
+            after x time steps, weights in the target network are updated to the wieghts in the policy network
+            
