@@ -7,7 +7,7 @@ class Vehicle {
 
   public:
     Vehicle();
-    void readSensors();
+    void sendToMapper();
     int perform(int& action);
     int getObservation();
     
@@ -16,7 +16,10 @@ class Vehicle {
     
     void left(int turningTime, int turnSpeed);
     void right(int turningTime, int turnSpeed);
-    
+
+    float getLeftDistance();
+    float getMidDistance();
+    float getRightDistance();
     void turnLeft(int turningTime, int turnSpeed);
     void turnRight(int turningTime, int turnSpeed);
     void fullStop();

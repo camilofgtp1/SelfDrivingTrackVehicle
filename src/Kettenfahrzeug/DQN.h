@@ -1,17 +1,11 @@
-#ifndef Q_h
-#define Q_h
+#ifndef DQN_h
+#define DQN_h
+//TODO: refactor Q array to be multidimensional, at least Q[State][Actions]
 
-class Q{
+class DQN{
 
 public:
-    Q();
-    float gamma;
-    float epsilon;  //Wahrschenlichkeit einer zufälligen Aktionsnauswahl
-    float alpha;    //Gewicht für die Vergesslichkeit des Agentes
-
-    float sensorLeft;
-    float sensorMid;
-    float sensorRight;
+    DQN();
 
     float motorImpulseLeftMin;
     float motorImpulseLeftMax;
@@ -23,6 +17,9 @@ public:
     void randomSpeeds(float arr[], int duration);
     void randomMotor(float arr[], int duration);
     void printArr(float arr[], int arrayLength);
+
+    float getAction();
+    float getReward();
     
 };
 

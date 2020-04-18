@@ -35,22 +35,30 @@ Vehicle::Vehicle() :
   */
 }
 
-
-void Vehicle::readSensors()
+//uses the serial port to send sensors measurements to mapper in processing
+void Vehicle::sendToMapper()
 {
-  // Clears the trigPin
-  //Serial.print("Sonar left: ");
-  //float measurements= [];
-
   Serial.print(sLeft.ping_cm());
   Serial.print(":");
   Serial.print(sMid.ping_cm());
   Serial.print(":");
   Serial.print(sRight.ping_cm());
   Serial.print("\n");
-  delay(1000);
-  
+  delay(500);
 }
+
+float Vehicle::getLeftDistance(){
+    return float(sMid.ping_cm());
+}
+
+float Vehicle::getMidDistance(){
+    return float(sMid.ping_cm());
+}
+
+float Vehicle::getRightDistance(){
+    return float(sMid.ping_cm());
+}
+
 
 void Vehicle::forwards(int turningTime, int turnSpeed) {
 
@@ -110,7 +118,7 @@ void Vehicle::turnLeft(int turningTime, int turnSpeed) {
   fullStop();
 }
 
-//TODO: angle control
+//TODO: angle control. not possible without compass!
 void Vehicle::turnRight(int turningTime, int turnSpeed) {
   digitalWrite(MOTOR_LEFT_INPUT1, LOW);
   digitalWrite(MOTOR_LEFT_INPUT2, HIGH);

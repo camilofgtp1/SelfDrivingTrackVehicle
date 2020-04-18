@@ -1,15 +1,7 @@
-#include "Q.h"
-
-//todo: organize action array
-//todo: generate random
-//todo: save it to file
-//todo: read from file
-//todo: upload to robot
-//todo: enjoy
-//todo: real Qlearning
+#include "DQN.h"
 #include <Arduino.h>
 
-Q::Q() {
+DQN::DQN() {
 
 }
 
@@ -30,32 +22,32 @@ Q::Q() {
    by the agent in the given time in seconds
    Here is the comparisson session with random actions
 */
-void Q::randomMeasurements(float session[], int duration) {
+void DQN::randomMeasurements(float session[], int duration) {
   for (int i = 0; i < duration; i++) {
     session[i] = (random(0, 4000) / 10);
   }
 }
 
-void Q::randomMotor(float arr[], int duration){
+void DQN::randomMotor(float arr[], int duration){
   for (int i = 0; i < duration; i++) {
     arr[i] = float(random(0, 2));
 
   }
 }
 
-void Q::randomSpeeds(float arr[], int duration){
+void DQN::randomSpeeds(float arr[], int duration){
   for (int i = 0; i < duration; i++) {
     arr[i] = float(random(80, 256));
   }
 }
 
-void Q::randomTimes(float arr[], int duration){
+void DQN::randomTimes(float arr[], int duration){
   for (int i = 0; i < duration; i++) {
     arr[i] = (random(200, 2000));
   }
 }
 
-void Q::printArr(float arr[], int arrayLength) {
+void DQN::printArr(float arr[], int arrayLength) {
   //Serial.print("\n__ArrayLenght: ");
   //Serial.println(arrayLength);
   for (int i = 0; i < arrayLength; i++ ) {

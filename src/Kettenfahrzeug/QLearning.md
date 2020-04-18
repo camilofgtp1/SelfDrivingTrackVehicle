@@ -1,12 +1,10 @@
-Open todos:
 Blogpost with python examples and theory
 https://alaurans.com/blog/reinforcement-learning-from-scratch-to-deep-q-network
 https://www.learndatasci.com/tutorials/reinforcement-q-learning-scratch-python-openai-gym/
 
 
 //TODO: observation and step taking on a method? if not difficult
-//TODO: Neural Network class QLearning is supposed to be passed to a neural network for it to learn to apply the learned behaviour dynamically
-                              check out Arduino NN Library: https://github.com/GiorgosXou/NeuralNetworks
+
                               
 //TODO: Vehicle function to take and action and recieve the reward
 //TODO: Save sessions to text file? is it doable?
