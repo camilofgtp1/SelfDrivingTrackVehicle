@@ -21,11 +21,32 @@ right motor, time, speed, //TODO: directions
 States , Environment observations:
 Measurements from ultrasonic sensors. Current 3 Sensors, //TODO: 2 to be removed
 
-//TODO: add Compass module which will add more observations 
-
-
 --------------------------
 
+Pseudocode:
+
+
+DQN Step by step: 
+initialize replay memory
+initialize policy network with random weights
+clone network and call it target network
+for each episode:
+    initialize the starting state
+    for each time step:
+        select an action
+            via exploration or exploitation
+        execute selected action in an emulator
+        observe reward and next state
+        store experience in replay memory
+        sample random batch from replay memory
+        preprocess states from batch
+        pass batch of preprocessed states to policy network
+        calculate loss between ouput Q values and target Q values
+            requires a pass to the target network for the next state
+        gradient descent updates weights in the policy network to minimize loss
+            after x time steps, weights in the target network are updated to the wieghts in the policy network
+            
+            
 int learningRate = 0.003;
 
 //2 steps per second to move for 1 minutes
@@ -141,24 +162,3 @@ void initialPopulation() {
    q = dense(states, [32, 32, 2], name='Q_primary')
   q_target = dense(states_next, [32, 32, 2], name='Q_target')
 
-
-DQN Step by step: 
-initialize replay memory
-initialize policy network with random weights
-clone network and call it target network
-for each episode:
-    initialize the starting state
-    for each time step:
-        select an action
-            via exploration or exploitation
-        execute selected action in an emulator
-        observe reward and next state
-        store experience in replay memory
-        sample random batch from replay memory
-        preprocess states from batch
-        pass batch of preprocessed states to policy network
-        calculate loss between ouput Q values and target Q values
-            requires a pass to the target network for the next state
-        gradient descent updates weights in the policy network to minimize loss
-            after x time steps, weights in the target network are updated to the wieghts in the policy network
-            
