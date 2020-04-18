@@ -7,29 +7,30 @@
  */
 #include "Vehicle.h"
 #include "DQN.h"
-
+#include "Action.h
 
 Vehicle vehicle;
 DQN q;
 
-int steps = 20;
-float measurements[20];
+int memory = 20;
+int numStates;
+int numActions;
+
 float leftMotor[20];
 float rightMotor[20];
 float turningTimes[20];
+float measurements[20];
 float turningSpeeds[20];
 
 float gamma;
 float epsilon;  //Wahrschenlichkeit einer zufälligen Aktionsnauswahl
 float alpha;    //Gewicht für die Vergesslichkeit des Agentes
 float stateSensorMid;
-int numActions =;
-int numStates;
-
 
 //has initial positions , nothing else
 void setup() {
     Serial.begin(9600);
+/*
     q.randomMeasurements(measurements, steps);
     q.randomMotor(leftMotor, steps);
     q.randomMotor(rightMotor, steps);
@@ -50,19 +51,26 @@ void setup() {
 
     Serial.println("turning speeds");
     q.printArr(turningSpeeds, steps);
-
+*/
 }
 
 int t = 0;
-const float explorationConst = (explorationMinutes * 60.0) / ((float(rollDelay)) /
-                                                              1000.0); //this is the approximate exploration time in units of number of times through the loop
+const float explorationConst = (explorationMinutes * 60.0) / ((float(rollDelay)) /1000.0);
+//this is the approximate exploration time in units of number of times through the loop
 
 void loop() {
     t++;
     epsilon = exp(-float(t) / explorationConst);
 
-    //
-    vehicle.readSensors();
+    //TODO:define this:
+    /*
+     * terms to define
+     * state
+     * action
+     * reward
+     */
+
+    }
     // a was between 0 and 3, also, it return which motor to move and how
     a = getAction();
 }

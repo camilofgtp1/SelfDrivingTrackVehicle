@@ -4,13 +4,33 @@
 class Action {
 
 public:
-    int motorLeftDirection;
+    Action(int motorLeftDirection, int motorRightDirection,
+            int turningTimeLeft, int turningTimeRight,
+            int PWMLeft, int PWMRight);
+
+    Action(int turningTimeLeft, int turningTimeRight,
+            int PWMLeft, int PWMRight);
+
+    /*
+     * int motorLeftDirection;
     int motorRightDirection;
     int turningTimeLeft;
     int turningTimeRight;
     int PWMLeft;
     int PWMRight;
+     */
 };
 
 
 #endif ACTION_H
+
+/* [ [sensorMid], [left, time, speed], [right, time, speed] ]
+
+   V1:
+    actions:
+    left:time:speed
+    right:time:speed
+
+    observation:
+    sensorMid
+*/

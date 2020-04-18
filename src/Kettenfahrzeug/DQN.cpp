@@ -5,18 +5,6 @@ DQN::DQN() {
 
 }
 
-
-/* [ [sensorMid], [left, time, speed], [right, time, speed] ]
-
-   V1:
-    actions:
-    left:time:speed
-    right:time:speed
-
-    observation:
-    sensorMid
-*/
-
 /*
    one session is the set of actions taken
    by the agent in the given time in seconds
