@@ -11,14 +11,14 @@ public:
     Action(int turningTimeLeft, int turningTimeRight,
             int PWMLeft, int PWMRight);
 
-    /*
-     * int motorLeftDirection;
+    int motorLeftDirection;
     int motorRightDirection;
     int turningTimeLeft;
     int turningTimeRight;
     int PWMLeft;
     int PWMRight;
-     */
+
+    float perform();
 };
 
 

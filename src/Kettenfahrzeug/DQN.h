@@ -18,7 +18,7 @@ public:
     void randomMotor(float arr[], int duration);
     void printArr(float arr[], int arrayLength);
 
-    float getAction();
+    float getActions();
     float getReward();
     
 };

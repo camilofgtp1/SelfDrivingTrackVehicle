@@ -1,5 +1,6 @@
 #include "DQN.h"
 #include <Arduino.h>
+#include "Action.h"
 
 DQN::DQN() {
 
@@ -44,6 +45,7 @@ void DQN::printArr(float arr[], int arrayLength) {
   Serial.println("___");
 }
 
-void getAction(){
+void getActions(){
 
+    for i
 }

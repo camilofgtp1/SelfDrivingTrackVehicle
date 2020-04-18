@@ -27,7 +27,7 @@ float epsilon;  //Wahrschenlichkeit einer zufälligen Aktionsnauswahl
 float alpha;    //Gewicht für die Vergesslichkeit des Agentes
 float stateSensorMid;
 
-//has initial positions , nothing else
+//has initial positions, nothing else
 void setup() {
     Serial.begin(9600);
 /*
@@ -62,15 +62,6 @@ void loop() {
     t++;
     epsilon = exp(-float(t) / explorationConst);
 
-    //TODO:define this:
-    /*
-     * terms to define
-     * state
-     * action
-     * reward
-     */
-
-    }
     // a was between 0 and 3, also, it return which motor to move and how
     a = getAction();
 }
