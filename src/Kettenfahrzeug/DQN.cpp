@@ -47,5 +47,4 @@ void DQN::printArr(float arr[], int arrayLength) {
 
 void getActions(){
 
-    for i
 }

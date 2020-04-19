@@ -145,6 +145,6 @@ void Vehicle::fullStop() {
 }
 
 //TODO: Implement performAction, which returns the reward
-void Vehicle::performAction() {
+float Vehicle::performAction() {
 
 }
