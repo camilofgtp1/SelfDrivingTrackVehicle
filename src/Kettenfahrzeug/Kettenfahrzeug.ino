@@ -10,16 +10,16 @@
 #include "Action.h"
 #include "NeuralNetwork.h"
 
-#define duration 20
+#define DURATION 20
 
 Vehicle vehicle;
 DQN q;
 
-NeuralNetwork NN(3, 4, 4, 3);
+//NeuralNetwork NN(3, 4, 4, 3);
 
 
 int replayMemory = 20;
-float initialRandomStates[duration];
+float initialRandomStates[DURATION];
 
 int numStates;
 int numActions;
@@ -35,47 +35,27 @@ float epsilon;  //Wahrschenlichkeit einer zufälligen Aktionsnauswahl
 float alpha;    //Gewicht für die Vergesslichkeit des Agentes
 float stateSensorMid;
 
-//has initial positions, nothing else
-void setup() {
-  Serial.begin(9600);
-  /*
-      q.randomMeasurements(measurements, replayMemory);
-      q.randomMotor(leftMotor, replayMemory);
-      q.randomMotor(rightMotor, replayMemory);
-      q.randomSpeeds(turningSpeeds, replayMemory);
-      q.randomTimes(turningTimes, replayMemory);
-
-      //Serial.println("measurements");
-      //q.printArr(measurements, replayMemory);
-
-      Serial.println("right motor: ");
-      q.printArr(rightMotor, replayMemory);
-
-      Serial.println("left motor: ");
-      q.printArr(leftMotor, replayMemory);
-
-      Serial.println("turning times: ");
-      q.printArr(turningTimes, replayMemory);
-
-      Serial.println("turning speeds");
-      q.printArr(turningSpeeds, replayMemory);
-  */
-}
-
+//has initi
 int t = 0;
 //const float explorationConst = (explorationMinutes * 60.0) / ((float(rollDelay)) /1000.0);
 //this is the approximate exploration time in units of number of times through the loop
 
+float val;
+// float Q[numalStates][numActions]; positions, nothing else
+void setup() {
+  Serial.begin(9600);
+}
+
 void loop() {
-  t++;
+
+ 
+  //t++;
   //    epsilon = exp(-float(t) / explorationConst);
 
   // a was between 0 and 3, also, it return which motor to move and how
   //    a = getAction();
 }
 
-float val;
-// float Q[numStates][numActions];
 
 int getAction() {
   int action;
@@ -87,6 +67,8 @@ int getAction() {
     valMax = val;
     aMax = 0;
   }
+
+
 }
 
 void randomSession(int duration) {
@@ -129,4 +111,31 @@ void randomSession(int duration) {
 
   }
   Serial.println("end of epoch ");
+}
+
+
+
+void launchRandom() {
+
+  q.randomMeasurements(measurements, replayMemory);
+  q.randomMotor(leftMotor, replayMemory);
+  q.randomMotor(rightMotor, replayMemory);
+  q.randomSpeeds(turningSpeeds, replayMemory);
+  q.randomTimes(turningTimes, replayMemory);
+
+  //Serial.println("measurements");
+  //q.printArr(measurements, replayMemory);
+
+  Serial.println("right motor: ");
+  q.printArr(rightMotor, replayMemory);
+
+  Serial.println("left motor: ");
+  q.printArr(leftMotor, replayMemory);
+
+  Serial.println("turning times: ");
+  q.printArr(turningTimes, replayMemory);
+
+  Serial.println("turning speeds");
+  q.printArr(turningSpeeds, replayMemory);
+
 }

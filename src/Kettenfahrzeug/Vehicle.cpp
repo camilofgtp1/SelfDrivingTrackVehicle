@@ -1,5 +1,6 @@
 #include "Vehicle.h"
 #include <NewPing.h>
+#include <Servo.h>
 
 #define MOTOR_RIGHT_ENABLE 6
 #define MOTOR_RIGHT_INPUT1 7
@@ -9,56 +10,34 @@
 #define MOTOR_LEFT_INPUT1 12
 #define MOTOR_LEFT_INPUT2 13
 
-#define TRIGGER_LEFT 10
-#define ECHO_LEFT 9
-#define MAX_DISTANCE 200
-
+#define MAX_DISTANCE 400
 #define TRIGGER_MID 5
 #define ECHO_MID 4
 
-#define TRIGGER_RIGHT 3
-#define ECHO_RIGHT 2
+#define SERVO_PIN 9
 
 Vehicle::Vehicle() :
-  sLeft(TRIGGER_LEFT, ECHO_LEFT, MAX_DISTANCE),
-  sMid(TRIGGER_MID, ECHO_MID, MAX_DISTANCE),
-  sRight(TRIGGER_RIGHT, ECHO_RIGHT, MAX_DISTANCE)
+  sMid(TRIGGER_MID, ECHO_MID, MAX_DISTANCE), servo()
 {
-  /*
-    pinMode(MOTOR_LEFT_ENABLE, OUTPUT);
-    pinMode(MOTOR_LEFT_INPUT1, OUTPUT);
-    pinMode(MOTOR_LEFT_INPUT2, OUTPUT);
-
-    pinMode(MOTOR_RIGHT_ENABLE, OUTPUT);
-    pinMode(MOTOR_RIGHT_INPUT1, OUTPUT);
-    pinMode(MOTOR_RIGHT_INPUT2, OUTPUT);
-  */
+  servo.attach(SERVO_PIN);
 }
 
 //uses the serial port to send sensors measurements to mapper in processing
 void Vehicle::sendToMapper()
 {
-  Serial.print(sLeft.ping_cm());
-  Serial.print(":");
   Serial.print(sMid.ping_cm());
-  Serial.print(":");
-  Serial.print(sRight.ping_cm());
   Serial.print("\n");
   delay(500);
-}
-
-float Vehicle::getLeftDistance(){
-    return float(sMid.ping_cm());
 }
 
 float Vehicle::getMidDistance(){
     return float(sMid.ping_cm());
 }
 
-float Vehicle::getRightDistance(){
-    return float(sMid.ping_cm());
+void Vehicle::moveServo(int angle, int turningSpeed){
+  servo.write(angle);
+  delay(turningSpeed);
 }
-
 
 void Vehicle::forwards(int turningTime, int turnSpeed) {
 
