@@ -10,32 +10,58 @@
 #include "Action.h"
 #include "NeuralNetwork.h"
 
-#define duration 20
+#define DURATION 20
 
 Vehicle vehicle;
 DQN q;
 
-NeuralNetwork NN(3, 4, 4, 3);
+//TODO: CURRENT, define state to be passed as inputs to the neural network
+/*
+  the state is made of observations of the environment
+  one time step of the vehicle's state is composed by:
+
+  distance sensor
+  servo angle
+  pitch
+  yaw
+  roll
 
 
-int replayMemory = 20;
-float initialRandomStates[duration];
+*/
+
+
+//NeuralNetwork NN(3, 4, 4, 3);
+
+int replayMemory = DURATION;
+float initialRandomStates[DURATION];
 
 int numStates;
 int numActions;
 
-float leftMotor[20];
-float rightMotor[20];
-float turningTimes[20];
-float measurements[20];
-float turningSpeeds[20];
+float leftMotor[DURATION];
+float rightMotor[DURATION];
+float turningTimes[DURATION];
+float measurements[DURATION];
+float turningSpeeds[DURATION];
 
 float gamma;
 float epsilon;  //Wahrschenlichkeit einer zufälligen Aktionsnauswahl
 float alpha;    //Gewicht für die Vergesslichkeit des Agentes
 float stateSensorMid;
 
-//has initial positions, nothing else
+
+//first an array of ultrasonic sensor measurements
+//second servo angle 
+float state[DURATION];
+
+void getStates() {
+
+  for (int i = 0; i < replayMemory; i++) {
+    state[i] = vehicle.getMidDistance();
+    Serial.print("state[i]:");
+    Serial.println(state[i]);
+  }
+}
 void setup() {
   Serial.begin(9600);
   /*
@@ -62,34 +88,16 @@ void setup() {
   */
 }
 
-int t = 0;
-//const float explorationConst = (explorationMinutes * 60.0) / ((float(rollDelay)) /1000.0);
-//this is the approximate exploration time in units of number of times through the loop
+
 
 void loop() {
-  t++;
-  //    epsilon = exp(-float(t) / explorationConst);
 
-  // a was between 0 and 3, also, it return which motor to move and how
-  //    a = getAction();
+
 }
 
-float val;
-// float Q[numStates][numActions];
 
-int getAction() {
-  int action;
-  float valMax = -10000000.0;
-  int aMax;
-  // s = state index
-  //val = Q[s][0];
-  if (val > valMax) {
-    valMax = val;
-    aMax = 0;
-  }
-}
+void randomSession() {
 
-void randomSession(int duration) {
   for (int i = 0; i < replayMemory; i++) {
     Serial.println(i);
     if (leftMotor[i] == 1.00 && rightMotor[i] == 0.00) {

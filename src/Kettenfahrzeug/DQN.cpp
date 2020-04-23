@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include "Action.h"
 
+
 DQN::DQN() {
 
 }
@@ -45,6 +46,11 @@ void DQN::printArr(float arr[], int arrayLength) {
   Serial.println("___");
 }
 
-void getActions(){
+void getRandomActions(int steps){
+
+
+    for(int i=0; i<steps; i++){
+
+    }
 
 }

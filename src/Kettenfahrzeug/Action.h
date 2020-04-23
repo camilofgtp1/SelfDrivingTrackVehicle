@@ -4,33 +4,16 @@
 class Action {
 
 public:
-    Action(int motorLeftDirection, int motorRightDirection,
+    Action(bool clockwiseLeft, bool clockwiseRight,
             int turningTimeLeft, int turningTimeRight,
-            int PWMLeft, int PWMRight);
+            int PWMLeft, int PWMRight, int servoAngle);
 
-    Action(int turningTimeLeft, int turningTimeRight,
-            int PWMLeft, int PWMRight);
+    bool clockwiseLeft, clockwiseRight;
+    int turningTimeLeft, turningTimeRight, PWMLeft, PWMRight, servoAngle;
 
-    int motorLeftDirection;
-    int motorRightDirection;
-    int turningTimeLeft;
-    int turningTimeRight;
-    int PWMLeft;
-    int PWMRight;
-
+    //todo: add reward
     float perform();
+
 };
 
-
-#endif ACTION_H
-
-/* [ [sensorMid], [left, time, speed], [right, time, speed] ]
-
-   V1:
-    actions:
-    left:time:speed
-    right:time:speed
-
-    observation:
-    sensorMid
-*/
+#endif

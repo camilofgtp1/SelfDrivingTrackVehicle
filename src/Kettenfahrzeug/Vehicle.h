@@ -2,6 +2,7 @@
 #define Vehicle_h
 
 #include <NewPing.h>
+#include <Servo.h>
 
 class Vehicle {
 
@@ -18,16 +19,21 @@ class Vehicle {
     float getLeftDistance();
 
     float getMidDistance();
-    float getRightDistance();
+
     void turnLeft(int turningTime, int turnSpeed);
     void turnRight(int turningTime, int turnSpeed);
     void fullStop();
     void testTurning();
     void demoMotors();
     void sendToMapper();
+    void turnServo(int angle);
+    float getServoAngle();
+    
 
   private:
-    NewPing sLeft, sMid, sRight;
+    NewPing sMid;
+    Servo servo;
+    int servoAngle;
 };
 
 #endif
