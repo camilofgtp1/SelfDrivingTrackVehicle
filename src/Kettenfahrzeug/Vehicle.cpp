@@ -10,17 +10,15 @@
 #define MOTOR_LEFT_INPUT1 12
 #define MOTOR_LEFT_INPUT2 13
 
-#define MAX_DISTANCE 200
-
+#define MAX_DISTANCE 400
 #define TRIGGER_MID 5
 #define ECHO_MID 4
 
-#define SERVO_PIN 3
+#define SERVO_PIN 9
 
-
-Vehicle::Vehicle() : sMid(TRIGGER_MID, ECHO_MID, MAX_DISTANCE)
+Vehicle::Vehicle() :
+  sMid(TRIGGER_MID, ECHO_MID, MAX_DISTANCE), servo()
 {
-  Servo servo;
   servo.attach(SERVO_PIN);
 }
 
@@ -32,20 +30,14 @@ void Vehicle::sendToMapper()
   delay(500);
 }
 
-void turnServo(int angle) {
-  if (angle >= 0 && angle <= 180) {
-    servo.write(int angle);
-  }
+float Vehicle::getMidDistance(){
+    return float(sMid.ping_cm());
 }
 
-float Vehicle::getServoAngle() {
-
+void Vehicle::moveServo(int angle, int turningSpeed){
+  servo.write(angle);
+  delay(turningSpeed);
 }
-
-float Vehicle::getMidDistance() {
-  return float(sMid.ping_cm());
-}
-
 
 void Vehicle::forwards(int turningTime, int turnSpeed) {
 
@@ -77,19 +69,19 @@ void Vehicle::reverse(int turningTime, int turnSpeed) {
 
 void Vehicle::left(int turningTime, int turnSpeed) {
 
-  digitalWrite(MOTOR_LEFT_INPUT1, LOW);
-  digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
-  analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
-  delay(turningTime);
-  fullStop();
+    digitalWrite(MOTOR_LEFT_INPUT1, LOW);
+    digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
+    analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
+    delay(turningTime);
+    fullStop();
 }
 void Vehicle::right(int turningTime, int turnSpeed) {
 
-  digitalWrite(MOTOR_RIGHT_INPUT1, LOW);
-  digitalWrite(MOTOR_RIGHT_INPUT2, HIGH);
-  analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
-  delay(turningTime);
-  fullStop();
+    digitalWrite(MOTOR_RIGHT_INPUT1, LOW);
+    digitalWrite(MOTOR_RIGHT_INPUT2, HIGH);
+    analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
+    delay(turningTime);
+    fullStop();
 }
 void Vehicle::turnLeft(int turningTime, int turnSpeed) {
 
