@@ -113,6 +113,8 @@ void setup() {
   Wire.write(0);
   Wire.endTransmission(true);
 }
+//todo: callibrate module
+//check out https://www.youtube.com/watch?v=dzjRk3qdCzk for heeading calculation
 
 void compass() {
    Wire.beginTransmission(MPU_ADDR);
@@ -147,12 +149,25 @@ void compass() {
 
 void loop() {
 
+  compass();
+  Serial.print("midSe : ");
+  delay(1000);
+  Serial.println(vehicle.getMidDistance());
+  //vehicle.forwards(10000, 120);
+  //t++;
+  //    epsilon = exp(-float(t) / explorationConst);
+
+  // a was between 0 and 3, also, it return which motor to move and how
+  //    a = getAction();
+}
+
 
 }
 
 
-void randomSession() {
+}
 
+void randomSession(int duration) {
   for (int i = 0; i < replayMemory; i++) {
     Serial.println(i);
     if (leftMotor[i] == 1.00 && rightMotor[i] == 0.00) {
