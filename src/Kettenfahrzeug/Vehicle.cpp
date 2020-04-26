@@ -22,93 +22,34 @@ Vehicle::Vehicle() :
   servo.attach(SERVO_PIN);
 }
 
-//uses the serial port to send sensors measurements to mapper in processing
-void Vehicle::sendToMapper()
-{
-  Serial.print(sMid.ping_cm());
-  Serial.print("\n");
-  delay(500);
+float Vehicle::getMidDistance() {
+  
+  return float(sMid.ping_cm());
 }
 
-float Vehicle::getMidDistance(){
-    return float(sMid.ping_cm());
-}
-
-void Vehicle::moveServo(int angle, int turningSpeed){
+void Vehicle::moveServo(int angle, int turningSpeed) {
   servo.write(angle);
   delay(turningSpeed);
 }
 
-void Vehicle::forwards(int turningTime, int turnSpeed) {
+void Vehicle::left(int turningTime, int turnSpeed, bool clockwise ) {
 
   digitalWrite(MOTOR_LEFT_INPUT1, LOW);
   digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
+  analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
+  delay(turningTime);
+  fullStop();
+}
+
+void Vehicle::right(int turningTime, int turnSpeed, bool clockwise) {
 
   digitalWrite(MOTOR_RIGHT_INPUT1, LOW);
   digitalWrite(MOTOR_RIGHT_INPUT2, HIGH);
-
-  analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
   analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
   delay(turningTime);
   fullStop();
 }
 
-void Vehicle::reverse(int turningTime, int turnSpeed) {
-
-  digitalWrite(MOTOR_LEFT_INPUT1, HIGH);
-  digitalWrite(MOTOR_LEFT_INPUT2, LOW);
-
-  digitalWrite(MOTOR_RIGHT_INPUT1, HIGH);
-  digitalWrite(MOTOR_RIGHT_INPUT2, LOW);
-
-  analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
-  analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
-  delay(turningTime);
-  fullStop();
-}
-
-void Vehicle::left(int turningTime, int turnSpeed) {
-
-    digitalWrite(MOTOR_LEFT_INPUT1, LOW);
-    digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
-    analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
-    delay(turningTime);
-    fullStop();
-}
-void Vehicle::right(int turningTime, int turnSpeed) {
-
-    digitalWrite(MOTOR_RIGHT_INPUT1, LOW);
-    digitalWrite(MOTOR_RIGHT_INPUT2, HIGH);
-    analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
-    delay(turningTime);
-    fullStop();
-}
-void Vehicle::turnLeft(int turningTime, int turnSpeed) {
-
-  digitalWrite(MOTOR_LEFT_INPUT1, HIGH);
-  digitalWrite(MOTOR_LEFT_INPUT2, LOW);
-
-  digitalWrite(MOTOR_RIGHT_INPUT1, LOW);
-  digitalWrite(MOTOR_RIGHT_INPUT2, HIGH);
-
-  analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
-  analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
-  delay(turningTime);
-  fullStop();
-}
-
-void Vehicle::turnRight(int turningTime, int turnSpeed) {
-  digitalWrite(MOTOR_LEFT_INPUT1, LOW);
-  digitalWrite(MOTOR_LEFT_INPUT2, HIGH);
-
-  digitalWrite(MOTOR_RIGHT_INPUT1, HIGH);
-  digitalWrite(MOTOR_RIGHT_INPUT2, LOW);
-
-  analogWrite(MOTOR_LEFT_ENABLE, turnSpeed);
-  analogWrite(MOTOR_RIGHT_ENABLE, turnSpeed);
-  delay(turningTime);
-  fullStop();
-}
 
 void Vehicle::fullStop() {
 
@@ -121,3 +62,15 @@ void Vehicle::fullStop() {
   analogWrite(MOTOR_LEFT_ENABLE, 0);
   analogWrite(MOTOR_RIGHT_ENABLE, 0 );
 }
+
+void Vehicle::getRandomStates(int duration){
+  
+}
+
+/*
+void DQN::randomMeasurements(float session[], int duration) {
+  for (int i = 0; i < duration; i++) {
+    session[i] = (random(0, 4000) / 10);
+  }
+}
+*/

@@ -9,23 +9,15 @@ class Vehicle {
   public:
     Vehicle();
 
-    float performAction();
+    void left(int turningTime, int turnSpeed, bool clockwise);
+    void right(int turningTime, int turnSpeed, bool clockwise);
+    
+    void fullStop();
 
-    void forwards(int time, int turnSpeed);
-    void reverse(int time, int turnSpeed);
-
-    void left(int turningTime, int turnSpeed);
-    void right(int turningTime, int turnSpeed);
-
+    void moveServo(int angle, int turningSpeed);
     float getMidDistance();
 
-    void turnLeft(int turningTime, int turnSpeed);
-    void turnRight(int turningTime, int turnSpeed);
-
-    void fullStop();
-    void testTurning();
-    void sendToMapper();
-    void moveServo(int angle, int turningSpeed);
+    void getRandomStates(int duration);
 
   private:
     NewPing sMid;

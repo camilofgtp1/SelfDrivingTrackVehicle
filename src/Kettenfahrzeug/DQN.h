@@ -7,19 +7,7 @@ class DQN{
 public:
     DQN();
 
-    float motorImpulseLeftMin;
-    float motorImpulseLeftMax;
-    float motorImpulseRightMin;
-    float motorImpulseRightMax;
 
-    void randomMeasurements(float session[], int duration);
-    void randomTimes(float arr[], int duration);
-    void randomSpeeds(float arr[], int duration);
-    void randomMotor(float arr[], int duration);
-    void printArr(float arr[], int arrayLength);
-
-    float getActions();
-    float getReward();
     
 };
 
