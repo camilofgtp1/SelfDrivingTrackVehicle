@@ -6,9 +6,6 @@ class DQN{
 
 public:
     DQN();
-
-
-    
 };
 
 #endif

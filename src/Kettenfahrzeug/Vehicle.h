@@ -11,14 +11,11 @@ class Vehicle {
 
     void left(int turningTime, int turnSpeed, bool clockwise);
     void right(int turningTime, int turnSpeed, bool clockwise);
-    
-    void fullStop();
-
     void moveServo(int angle, int turningSpeed);
     float getMidDistance();
-
-    void getRandomStates(int duration);
-
+    void fullStop();
+    void performActions(struct Action actions[], int duration);
+   
   private:
     NewPing sMid;
     Servo servo;

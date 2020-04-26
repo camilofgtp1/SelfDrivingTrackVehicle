@@ -5,44 +5,91 @@
    TODO: Implement https://github.com/GiorgosXou/NeuralNetworks NN Library for Arduino
    TODO: Vehicle moves away from the walls sending rotation direction of motors, time and speed each 500 milliseconds
    TODO: Implement and action class for the action space of the vehicle
+
+  State:
+  distance sensor int
+  servo angle int
+  yaw int
+
+  Actions:
+  int moveleft
+  int moveright
+  bool directionleft
+  bool directionsright
+  int timeleft
+  int timeright
+  int servo
+  bool break
+
 */
+
 #include "Vehicle.h"
 #include "DQN.h"
 #include "NeuralNetwork.h"
 #include "Wire.h"
+#include "Action.h"
+#include "State.h"
 
 #define DURATION 50
 
 Vehicle vehicle;
-DQN q;
-
-/**
-     the state is made of observations of the environment
-  one time step of the vehicle's state is composed by:
-
-  distance sensor can be int or float
-  servo angle int
-  pitch
-  yaw
-  roll
-
-*/
-
+DQN dqn;
 
 int replayMemory = DURATION;
-
-float leftMotor[DURATION];
-float rightMotor[DURATION];
-float turningTimes[DURATION];
-float measurements[DURATION];
-float turningSpeeds[DURATION];
 
 float gamma;
 float epsilon;  //Wahrschenlichkeit einer zufälligen Aktionsnauswahl
 float alpha;    //Gewicht für die Vergesslichkeit des Agentes
+int session[DURATION];
+
+struct State state[DURATION];
+struct Action actions[DURATION];
 
 void setup() {
   Serial.begin(9600);
+
+  //init random states
+  for (int i = 0; i < DURATION; i++) {
+    state[i].sonar = random(0, 200);
+    state[i].servo = random(0, 180);
+    state[i].yaw = random(0, 360);
+
+    Serial.print("sonar:");
+    Serial.print(state[i].sonar);
+    Serial.print("\t| servo: ");
+    Serial.print(state[i].servo);
+    Serial.print("\t| yaw: ");
+    Serial.println(state[i].yaw);
+    //delay(500);
+  }
+
+  // random actions for each second
+  for (int i = 0; i < DURATION; i++) {
+    actions[i].PWMLeft  = random(80, 255);
+    actions[i].PWMRight = random(80, 255);
+    actions[i].clockwiseLeft  = random(0, 2) == 0 ? false : true;
+    actions[i].clockwiseRight = random(0, 2) == 0 ? false : true;
+    actions[i].timeLeft  = random(0, 500);
+    actions[i].timeRight = random(0, 500);
+    actions[i].servoAngle  = random(0, 180);
+
+    Serial.print("PWMLeft:");
+    Serial.print(actions[i].PWMLeft);
+    Serial.print("\t| PWMRight: ");
+    Serial.print(actions[i].PWMRight);
+    Serial.print("\t| clockwiseLeft: ");
+    Serial.print(actions[i].clockwiseLeft);
+    Serial.print("\t| clockwiseRight: ");
+    Serial.print(actions[i].clockwiseRight);
+    Serial.print("\t| timeLeft: ");
+    Serial.print(actions[i].timeLeft);
+    Serial.print("\t| timeRight: ");
+    Serial.print(actions[i].timeRight);
+    Serial.print("\t| servoAngle: ");
+    Serial.println(actions[i].servoAngle);
+    //delay(500);
+  }
+
 
   /*
     Wire.begin();
@@ -50,15 +97,25 @@ void setup() {
     Wire.write(0x6B);
     Wire.write(0);
     Wire.endTransmission(true);
-
   */
 }
 
+
 void loop() {
 
-  Serial.println(vehicle.getMidDistance());
-  delay(500);
+  //Serial.println(vehicle.getMidDistance());
+  //vehicle.getRandomStates(session[DURATION], DURATION);
+  
+  vehicle.performActions(actions, DURATION);
+  vehicle.moveServo(180, 100);
+    delay(1000);
+
+  vehicle.moveServo(0, 100);
+    delay(1000);
+
+
 }
+
 
 
 /*
