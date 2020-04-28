@@ -44,8 +44,12 @@ int session[DURATION];
 
 struct State state[DURATION];
 struct Action actions[DURATION];
+#include "Servo.h"
+Servo servo;
 
 void setup() {
+  servo.attach(9);
+
   Serial.begin(9600);
 
   //init random states
@@ -54,13 +58,16 @@ void setup() {
     state[i].servo = random(0, 180);
     state[i].yaw = random(0, 360);
 
-    Serial.print("sonar:");
-    Serial.print(state[i].sonar);
-    Serial.print("\t| servo: ");
-    Serial.print(state[i].servo);
-    Serial.print("\t| yaw: ");
-    Serial.println(state[i].yaw);
-    //delay(500);
+    /*
+        Serial.print("sonar:");
+        Serial.print(state[i].sonar);
+        Serial.print("\t| servo: ");
+        Serial.print(state[i].servo);
+        Serial.print("\t| yaw: ");
+        Serial.println(state[i].yaw);
+        //delay(500);
+
+    */
   }
 
   // random actions for each second
@@ -73,21 +80,24 @@ void setup() {
     actions[i].timeRight = random(0, 500);
     actions[i].servoAngle  = random(0, 180);
 
-    Serial.print("PWMLeft:");
-    Serial.print(actions[i].PWMLeft);
-    Serial.print("\t| PWMRight: ");
-    Serial.print(actions[i].PWMRight);
-    Serial.print("\t| clockwiseLeft: ");
-    Serial.print(actions[i].clockwiseLeft);
-    Serial.print("\t| clockwiseRight: ");
-    Serial.print(actions[i].clockwiseRight);
-    Serial.print("\t| timeLeft: ");
-    Serial.print(actions[i].timeLeft);
-    Serial.print("\t| timeRight: ");
-    Serial.print(actions[i].timeRight);
-    Serial.print("\t| servoAngle: ");
-    Serial.println(actions[i].servoAngle);
-    //delay(500);
+    /*
+        Serial.print("PWMLeft:");
+        Serial.print(actions[i].PWMLeft);
+        Serial.print("\t| PWMRight: ");
+        Serial.print(actions[i].PWMRight);
+        Serial.print("\t| clockwiseLeft: ");
+        Serial.print(actions[i].clockwiseLeft);
+        Serial.print("\t| clockwiseRight: ");
+        Serial.print(actions[i].clockwiseRight);
+        Serial.print("\t| timeLeft: ");
+        Serial.print(actions[i].timeLeft);
+        Serial.print("\t| timeRight: ");
+        Serial.print(actions[i].timeRight);
+        Serial.print("\t| servoAngle: ");
+        Serial.println(actions[i].servoAngle);
+        //delay(500);
+
+    */
   }
 
 
@@ -100,19 +110,19 @@ void setup() {
   */
 }
 
-
 void loop() {
 
   //Serial.println(vehicle.getMidDistance());
+  //vehicle.moveServo(0, 100);
+  servo.write(0);
+  delay(1000);
   //vehicle.getRandomStates(session[DURATION], DURATION);
+
+  //vehicle.performActions(actions, DURATION);
+ //vehicle.moveServo(180, 100);
+   //servo.write(180);
+
   
-  vehicle.performActions(actions, DURATION);
-  vehicle.moveServo(180, 100);
-    delay(1000);
-
-  vehicle.moveServo(0, 100);
-    delay(1000);
-
 
 }
 

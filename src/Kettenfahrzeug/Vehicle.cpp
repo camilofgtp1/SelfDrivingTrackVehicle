@@ -21,10 +21,11 @@ Vehicle::Vehicle() :
   sMid(TRIGGER_MID, ECHO_MID, MAX_DISTANCE), servo()
 {
   servo.attach(SERVO_PIN);
+  Serial.println("servo attached");
+  Serial.println(SERVO_PIN);
 }
 
 float Vehicle::getMidDistance() {
-
   return float(sMid.ping_cm());
 }
 
@@ -89,5 +90,7 @@ void Vehicle::performActions(struct Action actions[], int duration) {
     left(actions[i].timeLeft, actions[i].PWMLeft, actions[i].clockwiseLeft);
     right(actions[i].timeRight, actions[i].PWMRight, actions[i].clockwiseRight);
     moveServo(actions[i].servoAngle, 1000);
+    Serial.print("servo");
+    Serial.println(actions[i].servoAngle);
   }
 }
