@@ -29,6 +29,8 @@
 
 #include "Action.h"
 #include "State.h"
+#include <TinyMPU6050.h>
+
 
 #define DURATION 50
 
@@ -45,8 +47,11 @@ int session[DURATION];
 struct State state[DURATION];
 struct Action actions[DURATION];
 
-unsigned int accelerometer_x;
-unsigned int gyro_x;
+
+MPU6050 mpu (Wire);
+
+int accelerometer_x;
+int gyro_x;
 
 
 int16_t accelerometer_y, accelerometer_z; // variables for accelerometer raw data
@@ -65,15 +70,31 @@ char* convert_int16_to_str(int16_t i) { // converts int16 to string. Moreover, r
 
 
 void setup() {
-
-
-  Wire.begin();
-  Wire.beginTransmission(0x68); // Begins a transmission to the I2C slave (GY-521 board)
-  Wire.write(0x6B); // PWR_MGMT_1 register
-  Wire.write(0); // set to zero (wakes up the MPU-6050)
-  Wire.endTransmission(true);
-
   Serial.begin(9600);
+
+  // Initialization
+  mpu.Initialize();
+
+  Serial.println("Starting calibration...");
+  mpu.Calibrate();
+
+  Serial.println("Calibration complete!");
+  Serial.println("Offsets:");
+  Serial.print("GyroX Offset = ");
+  Serial.println(mpu.GetGyroXOffset());
+  Serial.print("GyroY Offset = ");
+  Serial.println(mpu.GetGyroYOffset());
+  Serial.print("GyroZ Offset = ");
+  Serial.println(mpu.GetGyroZOffset());
+
+
+  /*
+    Wire.begin();
+    Wire.beginTransmission(0x68); // Begins a transmission to the I2C slave (GY-521 board)
+    Wire.write(0x6B); // PWR_MGMT_1 register
+    Wire.write(0); // set to zero (wakes up the MPU-6050)
+    Wire.endTransmission(true);
+  */
 
   //init random states
   for (int i = 0; i < DURATION; i++) {
@@ -135,10 +156,22 @@ void loop() {
   //Serial.println(vehicle.getMidDistance());
   //vehicle.moveServo(180, 3000);
   //vehicle.gyro();
-  compass();
+  //compass();
+  libTest();
 }
 
+void libTest() {
 
+
+
+  mpu.Execute();
+  Serial.print("AngX = ");
+  Serial.print(mpu.GetAngX());
+  Serial.print("  /  AngY = ");
+  Serial.print(mpu.GetAngY());
+  Serial.print("  /  AngZ = ");
+  Serial.println(mpu.GetAngZ());
+}
 void compass() {
 
   Wire.beginTransmission(0x68);
@@ -146,17 +179,20 @@ void compass() {
   Wire.endTransmission(false); // the parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
   Wire.requestFrom(0x68, 14, true); // request 14 registers
 
+  //set up sensitivy gyro
   Wire.beginTransmission(0x1B);
-  Wire.write(0);
+  Wire.write(2);
   Wire.endTransmission(false);
-
+  //set up sensitivy accelerometer
   Wire.beginTransmission(0x1C);
-  Wire.write(0);
+  Wire.write(3);
   Wire.endTransmission(false);
 
 
   // "Wire.read()<<8 | Wire.read();" means two registers are read and stored in the same variable
   accelerometer_x = Wire.read() << 8 | Wire.read(); // reading registers: 0x3B (ACCEL_XOUT_H) and 0x3C (ACCEL_XOUT_L)
+
+  accelerometer_x = accelerometer_x + 32768;
   Serial.print("accelX: ");
   Serial.print(accelerometer_x);
 
@@ -186,17 +222,20 @@ void compass() {
       raw acc value / 16384
       write to set sensitivity
       FS_SEL  -  Register 1B, Bits 3 and 4 (gyroscope sensitivity)
-      Value written to FS_SEL  -  sensitivity:
+      Value written to FS_SEL at 0x1B  -  sensitivity:
       0 - +-250
       1 - +-500
       2 - +-1000
       3 - +-2000
       AFS_SEL  -  Register 1C, Bits 3 and 4 (accelerometer sensitivity)
-      Value written to AFS_SEL  -  sensitivity:
+      Value written to AFS_SEL at 0x1C  -  sensitivity:
       0 - +-2
       1 - +-4
       2 - +-8
       3 - +-16
+
+      int xAng = map(acceleration_x,minVal,maxVal,-90,90);
+      x= RAD_TO_DEG * (atan2(-yAng, -zAng)+PI);
   */
   // delay
   delay(200);
