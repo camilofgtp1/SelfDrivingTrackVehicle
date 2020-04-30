@@ -12,7 +12,7 @@ class Vehicle {
     void left(int turningTime, int turnSpeed, bool clockwise);
     void right(int turningTime, int turnSpeed, bool clockwise);
     void moveServo(int angle, int turningSpeed);
-    float getMidDistance();
+    int getMidDistance();
     void fullStop();
     void performActions(struct Action actions[], int duration);
    

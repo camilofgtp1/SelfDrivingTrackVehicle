@@ -20,18 +20,42 @@
 Vehicle::Vehicle() :
   sMid(TRIGGER_MID, ECHO_MID, MAX_DISTANCE), servo()
 {
-  servo.attach(SERVO_PIN);
-  Serial.println("servo attached");
-  Serial.println(SERVO_PIN);
 }
 
-float Vehicle::getMidDistance() {
-  return float(sMid.ping_cm());
+int Vehicle::getMidDistance() {
+  return (sMid.convert_cm(sMid.ping_median(3)));
 }
+
+//todo: set turning speed
+//todo: set turning limit, measure real turning angle
 
 void Vehicle::moveServo(int angle, int turningSpeed) {
+  //to scale
+  //val = map(val, 0, 1023, 0, 179);  // scale it to use it with
+
+/*
+
+int pos1 =0;
+void moveTo(int position, int speed){
+  mapSpeed = map(speed, 0, 30, 30,0);
+  if(position > pos){
+    for(pos=pos1; pos<= position; pos++){
+      myservo.write(pos);
+      pos1=pos;
+      delay(mapSpeed);
+    }
+  }
+}
+
+*/
+  
+  servo.attach(SERVO_PIN);
   servo.write(angle);
   delay(turningSpeed);
+  servo.detach();
+
+
+  
 }
 
 void Vehicle::left(int turningTime, int turnSpeed, bool clockwise ) {

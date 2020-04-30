@@ -44,11 +44,8 @@ int session[DURATION];
 
 struct State state[DURATION];
 struct Action actions[DURATION];
-#include "Servo.h"
-Servo servo;
 
 void setup() {
-  servo.attach(9);
 
   Serial.begin(9600);
 
@@ -108,21 +105,19 @@ void setup() {
     Wire.write(0);
     Wire.endTransmission(true);
   */
+
 }
 
 void loop() {
 
   //Serial.println(vehicle.getMidDistance());
-  //vehicle.moveServo(0, 100);
-  servo.write(0);
-  delay(1000);
+  //vehicle.moveServo(0, 3000);
   //vehicle.getRandomStates(session[DURATION], DURATION);
-
   //vehicle.performActions(actions, DURATION);
- //vehicle.moveServo(180, 100);
-   //servo.write(180);
-
-  
+  //Serial.println(vehicle.getMidDistance());
+  //vehicle.moveServo(90, 3000);
+  //Serial.println(vehicle.getMidDistance());
+  //vehicle.moveServo(180, 3000);
 
 }
 
