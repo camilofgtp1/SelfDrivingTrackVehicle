@@ -3,6 +3,7 @@
 
 #include <NewPing.h>
 #include <Servo.h>
+#include "Wire.h"
 
 class Vehicle {
 
@@ -15,7 +16,9 @@ class Vehicle {
     int getMidDistance();
     void fullStop();
     void performActions(struct Action actions[], int duration);
-   
+    void gyro();
+    char* Vehicle::convert_int16_to_str(int16_t i, char tmp_str);
+    
   private:
     NewPing sMid;
     Servo servo;
