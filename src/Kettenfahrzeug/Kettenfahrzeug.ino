@@ -1,85 +1,84 @@
 /*
-   CURRENT: functions with random state inputs on an array, to init the network?
-   TODO: QLearning.md algorithm gives actions that move the vehicle for the amount of time specified
-   TODO: Implent Markovs decision process
-   TODO: Implement https://github.com/GiorgosXou/NeuralNetworks NN Library for Arduino
-   TODO: Vehicle moves away from the walls sending rotation direction of motors, time and speed each 500 milliseconds
-   TODO: Implement and action class for the action space of the vehicle
-
   State:
   distance sensor int
   servo angle int
 
   Actions:
-  int moveleft
-  int moveright
-  bool directionleft
-  bool directionsright
-  int timeleft
-  int timeright
-  int servo
-  bool break
+  int PWMLeft;
+  int PWMRight;
+  bool clockwiseLeft;
+  bool clockwiseRight;
+  int timeLeft;
+  int timeRight;
+  int servoAngle;
+
+CURRENT IMPLEMENTING:
+https://planetachatbot.com/q-learning-con-arduino-crawling-robot-espanol-5eb0acf5aaaf
+
 */
 
 #include "Vehicle.h"
-#include "DQN.h"
-#include "NeuralNetwork.h"
-
 #include "Action.h"
-#include "State.h"
-
-#define NumberOf(arg) ((unsigned int) (sizeof (arg) / sizeof (arg [0])))
 #define DURATION 50
 
+
 Vehicle vehicle;
-DQN dqn;
 
-int replayMemory = DURATION;
+// distance:120 | servoAngle: 90 - 8 offset
+int Q[6][2] = {
+  {0, 0 },
+  {0, 0 },
+  {0, 0 },
+  {0, 0 },
+  {0, 0 },
+  {0, 0 }
+};
 
-float gamma;
-float epsilon;  //Wahrschenlichkeit einer zufälligen Aktionsnauswahl
-float alpha;    //Gewicht für die Vergesslichkeit des Agentes
-int session[DURATION];
+int action = 0;
+int state = 0;
+int cont = 0;
+float gamma = 0.8;
+float Qmax = 0;
 
-struct State state[DURATION];
-struct Action actions[DURATION];
+//?
+float  a = 0, b = 0;
 
+int x = 0;
+int goal = 15;
 
 void setup() {
   Serial.begin(9600);
-  const unsigned int layers[] = {2, 3, 5, 7};
-  randomStates();
-  NeuralNetwork NN(layers, weights, biases, NumberOf(layers));
+
+  //PWMLeft:121  | PWMRight: 160 | clockwiseLeft: 1  | clockwiseRight: 0 | timeLeft: 939 | timeRight: 698  | servoAngle: 141 | Reward: 1000
+  int R[6][8] = {
+    {120, 120, 1, 0, 1000, 1000, 180, 0},
+    {120, 120, 1, 1, 1000, 1000, 82, 1000},
+    {120, 120, 0, 1, 1000, 1000, 82, 0},
+    {120, 120, 0, 0, 1000, 1000, 82, 0 },
+    {120, 120, 0, 1, 1000, 1000, 82, 0 },
+    {120, 120, 0, 1, 1000, 1000, 82, 0 },
+  };
+
 }
 
-
 void loop() {
-  //Serial.println(vehicle.getMidDistance());
-  //vehicle.moveServo(0, 1000);
 
-  //vehicle.getRandomStates(session[DURATION], DURATION);
-  //vehicle.performActions(actions, DURATION);
-  //Serial.println(vehicle.getMidDistance());
-  //vehicle.moveServo(82, 1000);
-  //Serial.println(vehicle.getMidDistance());
-  //vehicle.moveServo(174, 1000);
-  // Serial.println(vehicle.getMidDistance());
-  //vehicle.moveServo(82, 1000);
 }
 
 void randomStates() {
+  /*
+    //init random states
+    for (int i = 0; i < DURATION; i++) {
+      state[i].sonar = random(0, 200);
+      state[i].servo = random(0, 180);
 
-  //init random states
-  for (int i = 0; i < DURATION; i++) {
-    state[i].sonar = random(0, 200);
-    state[i].servo = random(0, 180);
-
-    Serial.print("sonar:");
-    Serial.print(state[i].sonar);
-    Serial.print("\t| servo: ");
-    Serial.print(state[i].servo);
-    delay(500);
-  }
+      Serial.print("sonar:");
+      Serial.print(state[i].sonar);
+      Serial.print("\t| servo: ");
+      Serial.print(state[i].servo);
+      delay(500);
+    }
+  */
 }
 
 
