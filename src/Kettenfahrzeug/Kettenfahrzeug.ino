@@ -39,12 +39,9 @@ int state = 0;
 int cont = 0;
 float gamma = 0.8;
 float Qmax = 0;
-
-//?
-float  a = 0, b = 0;
-
 int x = 0;
 int goal = 15;
+
 
 void setup() {
   Serial.begin(9600);
