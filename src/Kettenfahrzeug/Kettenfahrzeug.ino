@@ -94,9 +94,6 @@ void setup() {
 
 void loop() {
   initWeights();
-
-
-
   Serial.println ();
   Serial.println();
   Serial.print ("TrainingCycle: ");

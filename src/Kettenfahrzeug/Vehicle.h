@@ -17,7 +17,6 @@ class Vehicle {
     void fullStop();
     void performActions(int action[8][8], int PatternCount, int OutputNodes);
     void gyro();
-    //char* Vehicle::convert_int16_to_str(int16_t i, char tmp_str);
     
   private:
     NewPing sMid;

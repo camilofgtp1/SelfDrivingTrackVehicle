@@ -106,7 +106,7 @@ void Vehicle::fullStop() {
 }
 
 //example of action
-//PWMLeft:121  | PWMRight: 160 | clockwiseLeft: 1  | clockwiseRight: 0 | timeLeft: 939 | timeRight: 698  | servoAngle: 141
+//PWMLeft:0.2  | PWMRight: 0.7 | servo: 0.4
 void Vehicle::performActions(int action[8][8], int PatternCount, int OutputNodes ) {
   for (int i = 0; i < PatternCount; i++) {
     for (int j = 0; j < OutputNodes - 1; j++) {
