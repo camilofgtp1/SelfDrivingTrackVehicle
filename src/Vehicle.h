@@ -10,14 +10,14 @@ class Vehicle {
   public:
     Vehicle();
 
-    void left(int turningTime, int turnSpeed, bool clockwise);
-    void right(int turningTime, int turnSpeed, bool clockwise);
+    void drive(int pwmLeft, int pwmRight, int turningTime, bool turnDirection);
     void moveServo(int angle, int turningSpeed);
-    int getMidDistance();
+    int readSonarCms();
+    int readSonarNormalized();
     void fullStop();
-    void performActions(struct Action actions[], int duration);
+    void performActions(int action[8][8], int PatternCount, int OutputNodes);
     void gyro();
-    char* Vehicle::convert_int16_to_str(int16_t i, char tmp_str);
+    //char* Vehicle::convert_int16_to_str(int16_t i, char tmp_str);
     
   private:
     NewPing sMid;
