@@ -41,10 +41,10 @@ void Vehicle::moveServo(int angle, int turningSpeed) {
 }
 
 //true turn right, false turn left// counter clockwise on the left is turnnig right
-void Vehicle::drive(int pwmLeft, int pwmRight, int turningTime, bool turnDirection) {
+void Vehicle::drive(int pwmLeft, int pwmRight) {
     int steps = 100;
     Serial.print(pwmLeft);
-    for (int i = 0; i < turningTime; i+=200) {
+    for (int i = 0; i < 1000; i+=200) {
     Serial.println(i);    
       //forwards
       if (pwmLeft > 0 && pwmRight > 0) {

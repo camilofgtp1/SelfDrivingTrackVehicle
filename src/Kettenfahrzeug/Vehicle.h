@@ -10,7 +10,7 @@ class Vehicle {
   public:
     Vehicle();
 
-    void drive(int pwmLeft, int pwmRight, int turningTime, bool turnDirection);
+    void drive(int pwmLeft, int pwmRight);
     void moveServo(int angle, int turningSpeed);
     int readSonarCms();
     int readSonarNormalized();

@@ -1,6 +1,5 @@
 #include "Vehicle.h"
 #include <TinyMPU6050.h>
-#define DURATION 50
 
 Vehicle vehicle;
 MPU6050 mpu (Wire);
@@ -15,28 +14,28 @@ const float InitialWeightMax = 0.5;
 const float Success = 0.0004;
 
 //Input states
-// ultrasonicSensor: 0 to 100 | servoAngle : 0 to 100, right to left | gyroZ: 90, 0 is south, 0.5 is north, 0.25 is east, 0.75 is west
+// ultrasonicSensor: 0.0 to 1.0 | servoAngle : 0.0 to 1.0, right to left | gyroZ: 0 is south, 0.5 is north, 0.25 is east, 0.75 is west
 float Input[PatternCount][InputNodes] = {
-  {0.1, 0,   0 },  //01 close to obstacle, servo to the right, heading south
-  {0.1, 0,   0.5},  //02 close to obstacle, servo to the right, heading north
-  {0.1, 1, 0 },  //03 close to obstacle, servo to the left, heading south
-  {0.1, 1, 0.5},  //04 close to obstacle, servo to the left, heading north
-  {0.1, 50,  0 },  //05 close from obstacle, servo to the front, heading south
-  {0.1, 50,  0.5},  //06 close from obstacle, servo to the front, heading north
-  {0.9, 1, 0 },  //07 far from obstacle, servo to the left, heading south
-  {0.9, 1, 0.5}   //08 far from obstacle, servo to the left, heading north};
+  {0.1, 0,  0  }, //01 close to obstacle, servo to the right, heading south
+  {0.1, 0,  0.5}, //02 close to obstacle, servo to the right, heading north
+  {0.1, 1,  0  }, //03 close to obstacle, servo to the left, heading south
+  {0.1, 1,  0.5}, //04 close to obstacle, servo to the left, heading north
+  {0.1, 50, 0  }, //05 close from obstacle, servo to the front, heading south
+  {0.1, 50, 0.5}, //06 close from obstacle, servo to the front, heading north
+  {0.9, 1,  0  }, //07 far from obstacle, servo to the left, heading south
+  {0.9, 1,  0.5}  //08 far from obstacle, servo to the left, heading north};
 };
 
 //Reference Outputs
-//PWMLeft:0 to 10 | PWMRight: 0 to 100 | servoAngle: 0 to 100 | time: 0 to 100
+//PWMLeft:0.0 to 1.0 | PWMRight: 0. to 1.0 | servoAngle: 0 to 1.0
 const float Target[PatternCount][OutputNodes] = {
-  {0.3, 0.70, 1}, //01 turn left
-  {0.3, 0.70, 1}, //02 turn left
-  {0.7, 0.30, 1}, //03 turn right
-  {0.7, 0.30, 1}, //04 turn right
-  {0.30, 0.30, 0.50 }, //05 backwards
-  {0.30, 0.30, 0.50 }, //05 backwards
-  {0.80, 0.80, 0.50 }, //07 forwards
+  {0.3, 0.70, 1},     //01 turn left
+  {0.3, 0.70, 1},     //02 turn left
+  {0.7, 0.30, 1},     //03 turn right
+  {0.7, 0.30, 1},     //04 turn right
+  {0.30, 0.30, 0.50 },//05 backwards
+  {0.30, 0.30, 0.50 },//05 backwards
+  {0.80, 0.80, 0.50 },//07 forwards
   {0.80, 0.80, 0.50}  //08 forwards
 };
 
@@ -116,9 +115,6 @@ void loop() {
   Serial.println ();
   ReportEvery1000 = 1;
 }
-
-
-//Serial.print("sonar reading normalized: ");
 
 //Scan servo range left to right and right to left
 //Serial.println(float(vehicle.readSonarNormalized() / 100.0));
