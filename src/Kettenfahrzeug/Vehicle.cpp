@@ -18,8 +18,9 @@
 #define SERVO_PIN 9
 
 Vehicle::Vehicle() :
-  sMid(TRIGGER_MID, ECHO_MID, MAX_DISTANCE), servo()
+  sMid(TRIGGER_MID, ECHO_MID, MAX_DISTANCE), servo(), servoAngle(90)
 {
+  
 }
 
 //returns the average of 3 readings in cms
@@ -30,9 +31,14 @@ int Vehicle::readSonarCms() {
 int Vehicle::readSonarNormalized() {
   return map(readSonarCms(), 3, MAX_DISTANCE, 0, 100);
 }
+int Vehicle::getServoAngle(){
+  return servoAngle;
+}
+
 
 void Vehicle::moveServo(int angle) {
   int newAngle = map(angle, 0, 100, 0, 180);
+  servoAngle =newAngle;
   servo.attach(SERVO_PIN);
   servo.write(newAngle);
   delay(100);
@@ -42,9 +48,12 @@ void Vehicle::moveServo(int angle) {
 //true turn right, false turn left// counter clockwise on the left is turnnig right
 void Vehicle::drive(int pwmLeft, int pwmRight) {
     int steps = 100;
+    Serial.print("pwmLeft: ");
     Serial.print(pwmLeft);
+    Serial.print("| pwmRight: ");
+    Serial.print(pwmRight);
+    
     for (int i = 0; i < 1000; i+=200) {
-    Serial.println(i);    
       //forwards
       if (pwmLeft > 0 && pwmRight > 0) {
         digitalWrite(MOTOR_LEFT_INPUT1, LOW);

@@ -1,44 +1,35 @@
 #include "Vehicle.h"
 #include <TinyMPU6050.h>
 
-
 Vehicle vehicle;
 MPU6050 mpu (Wire);
 
-const int PatternCount = 8;
-const int InputNodes = 3;
-const int OutputNodes = 3;
+const int PatternCount = 4;
+const int InputNodes = 2;
+const int OutputNodes = 2;
 const float Momentum = 0.9;
 const float InitialWeightMax = 0.5;
 
-const float Success = 0.4;
-const int HiddenNodes = 5;
-const float LearningRate = 0.5;
+const float Success = 0.06;
+const int HiddenNodes = 3;
+const float LearningRate = 0.4;
 
-//Input states
-// ultrasonicSensor: 0.0 to 1.0 | servoAngle : 0.0 to 1.0, right to left | gyroZ: 0 is south, 0.5 is north, 0.25 is east, 0.75 is west
+//Reference Input states, 
+// ultrasonicSensor: 0.0 to 1.0 | gyroZ: 0 is south, 0.5 is north, 0.25 is east, 0.75 is west
 float Input[PatternCount][InputNodes] = {
-  {0.1, 0,  0  }, //01 close to obstacle, servo to the right, heading south
-  {0.1, 0,  0.5}, //02 close to obstacle, servo to the right, heading north
-  {0.1, 1,  0  }, //03 close to obstacle, servo to the left, heading south
-  {0.1, 1,  0.5}, //04 close to obstacle, servo to the left, heading north
-  {0.1, 50, 0  }, //05 close from obstacle, servo to the front, heading south
-  {0.1, 50, 0.5}, //06 close from obstacle, servo to the front, heading north
-  {0.9, 1,  0  }, //07 far from obstacle, servo to the left, heading south
-  {0.9, 1,  0.5}  //08 far from obstacle, servo to the left, heading north};
+  {0.1, 0.1},   //01 close to obstacle, heading south
+  {0.1, 0.5},   //02 close to obstacle, heading north
+  {0.9, 0.1},   //07 far from obstacle, heading south
+  {0.9, 0.5}    //08 far from obstacle,  heading north};
 };
 
 //Reference Outputs
 //PWMLeft:0.0 to 1.0 | PWMRight: 0. to 1.0 | servoAngle: 0 to 1.0
 const float Target[PatternCount][OutputNodes] = {
-  {0.3, 0.70, 1},     //01 turn left
-  {0.3, 0.70, 1},     //02 turn left
-  {0.7, 0.30, 1},     //03 turn right
-  {0.7, 0.30, 1},     //04 turn right
-  {0.30, 0.30, 0.50 },//05 backwards
-  {0.30, 0.30, 0.50 },//05 backwards
-  {0.80, 0.80, 0.50 },//07 forwards
-  {0.80, 0.80, 0.50}  //08 forwards
+  {0.1, 0.9},     //01 turn left
+  {0.9, 0.9},     //04 turn right
+  {0.10, 0.50 },  //05 backwards
+  {0.90, 0.50}    //08 forwards
 };
 
 int i, j, p, q, r;
@@ -76,22 +67,17 @@ void startMPU() {
 
 void setup() {
   Serial.begin(9600);
+
   // Initialization
   mpu.Initialize();
+
   randomSeed(analogRead(3));
   ReportEvery1000 = 1;
   for ( p = 0 ; p < PatternCount ; p++ ) {
     RandomizedIndex[p] = p ;
   }
   train();
-  //map nn output before passing to drive function
-  /*
-    float testLeft= 0.8;
-    float testRight = 0.2;
-    int mappedLeft = map(testLeft*100, 0, 100, -255, 255);
-    int mappedRight = map(testRight*100, 0, 100, -255, 255);
-    vehicle.drive(mappedLeft, mappedRight, 1000, false);
-  */
+
 }
 
 void loop() {
@@ -113,30 +99,8 @@ void loop() {
   Serial.println ();
   Serial.println ();
   ReportEvery1000 = 1;
-
   drive();
 }
-
-//Scan servo range left to right and right to left
-//Serial.println(float(vehicle.readSonarNormalized() / 100.0));
-
-//vehicle.moveServo(0, 100);  // 0 is to the right, 100 to the left, function receives and int from 0 to 100
-//Serial.print("Z axis: ");
-//Serial.println(mapZAxis() / 100.0);
-
-
-/*
-  for (int i = 0; i <= 100; i += 10 ) {
-  Serial.println(float(vehicle.readSonarNormalized() / 100.0));
-  vehicle.moveServo(i, 500);
-  }
-
-  for (int i = 100; i >= 0; i -= 10 ) {
-  Serial.println(float(vehicle.readSonarNormalized() / 100.0));
-  vehicle.moveServo(i, 500);
-
-  }
-*/
 
 int mapZAxis() {
   mpu.Execute();
@@ -144,6 +108,8 @@ int mapZAxis() {
   return mapped;
 }
 
+
+//PWMLeft:0.0 to 1.0 | PWMRight: 0. to 1.0 | servoAngle: 0 to 1.0
 void drive()
 {
   if (Success < Error) {
@@ -154,33 +120,43 @@ void drive()
 
     float TestInput[] = {0, 0, 0};
 
-    float sonarReading = vehicle.readSonarNormalized() / 100;
+    float sonarReading = vehicle.readSonarNormalized() / 100.0;
+    float headingAngle = mapZAxis() / 100.0;
 
     TestInput[0] = sonarReading;
-    //other inputs:
-    //TestInput[1] = float(LL2) / 100;
+    TestInput[1] = headingAngle;
 
-    InputToOutput(TestInput[0]); //INPUT to ANN to obtain OUTPUT
+    /*
+        Serial.print("sonar: ");
+        Serial.print(TestInput[0]);
+        Serial.print("| servoAngle: ");
+        Serial.print(TestInput[1]);
+        Serial.print("| gyroZ: ");
+        Serial.print(TestInput[2]);
+        Serial.println();
+    */
+    InputToOutput(TestInput[0], TestInput[1]); //INPUT to ANN to obtain OUTPUT
 
-    int outputServoAngle = Output[0] * 100;
-    // int speedB = Output[1] * 100;
+    Serial.print("pwmLeft: ");
+    Serial.print(Output[0]);
+    Serial.print("| pwmRight: ");
+    Serial.print(Output[1]);
+    Serial.println();
+    
+    //vehicle.drive((Output[0] * 100)+100, (Output[1] *100)+100);
 
-    //speedA = int(speedA);
-    //speedB = int(speedB);
-
-    //do actions
-    //motorA(speedA);
-    vehicle.moveServo(outputServoAngle);
-    //motorB(speedB);
-    delay(50);
+ 
   }
 }
 
 
-void InputToOutput(float input1)
+void InputToOutput(float input0, float input1)
 {
-  float TestInput[] = {0, 0, 0};
-  TestInput[0] = input1;
+
+  float TestInput[] = {0.0, 0.0};
+  TestInput[0] = input0;
+  TestInput[1] = input1;
+
 
   /***********************************
     Compute hidden layer activations
@@ -194,16 +170,16 @@ void InputToOutput(float input1)
     Hidden[i] = 1.0 / (1.0 + exp(-Accum)) ;
   }
 
-  /******************************************************************
+  /*******************************************************
     Compute output layer activations and calculate errors
-  ******************************************************************/
+  ********************************************************/
 
   for ( i = 0 ; i < OutputNodes ; i++ ) {
     Accum = OutputWeights[HiddenNodes][i] ;
     for ( j = 0 ; j < HiddenNodes ; j++ ) {
       Accum += Hidden[j] * OutputWeights[j][i] ;
     }
-    Output[i] = 1.0 / (1.0 + exp(-Accum)) ;
+    Output[i] = 1.0 / (1.0 + exp(-Accum));
   }
 
 }

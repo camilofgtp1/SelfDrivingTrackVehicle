@@ -12,6 +12,7 @@ class Vehicle {
 
     void drive(int pwmLeft, int pwmRight);
     void moveServo(int angle);
+    int getServoAngle();
     int readSonarCms();
     int readSonarNormalized();
     void fullStop();
@@ -21,6 +22,7 @@ class Vehicle {
   private:
     NewPing sMid;
     Servo servo;
+    int servoAngle;
 };
 
 #endif
