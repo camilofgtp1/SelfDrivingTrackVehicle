@@ -11,11 +11,11 @@ class Vehicle {
     Vehicle();
 
     void drive(int pwmLeft, int pwmRight);
-    void moveServo(int angle, int turningSpeed);
+    void moveServo(int angle);
     int readSonarCms();
     int readSonarNormalized();
     void fullStop();
-    void performActions(int action[8][8], int PatternCount, int OutputNodes);
+    void performActions(float Target[8][8], int PatternCount, int OutputNodes);
     void gyro();
     
   private:

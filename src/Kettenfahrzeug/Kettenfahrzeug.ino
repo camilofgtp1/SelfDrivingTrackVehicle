@@ -1,17 +1,19 @@
 #include "Vehicle.h"
 #include <TinyMPU6050.h>
 
+
 Vehicle vehicle;
 MPU6050 mpu (Wire);
 
 const int PatternCount = 8;
 const int InputNodes = 3;
-const int HiddenNodes = 4;
 const int OutputNodes = 3;
-const float LearningRate = 0.3;
 const float Momentum = 0.9;
 const float InitialWeightMax = 0.5;
-const float Success = 0.0004;
+
+const float Success = 0.4;
+const int HiddenNodes = 5;
+const float LearningRate = 0.5;
 
 //Input states
 // ultrasonicSensor: 0.0 to 1.0 | servoAngle : 0.0 to 1.0, right to left | gyroZ: 0 is south, 0.5 is north, 0.25 is east, 0.75 is west
@@ -111,12 +113,14 @@ void loop() {
   Serial.println ();
   Serial.println ();
   ReportEvery1000 = 1;
+
+  drive();
 }
 
 //Scan servo range left to right and right to left
 //Serial.println(float(vehicle.readSonarNormalized() / 100.0));
 
-//vehicle.moveServo(0, 1000);  // 0 is to the right, 100 to the left, function receives and int from 0 to 100
+//vehicle.moveServo(0, 100);  // 0 is to the right, 100 to the left, function receives and int from 0 to 100
 //Serial.print("Z axis: ");
 //Serial.println(mapZAxis() / 100.0);
 
@@ -138,4 +142,68 @@ int mapZAxis() {
   mpu.Execute();
   int mapped = map(mpu.GetAngZ(), -179.9, 179.9, 0, 100);
   return mapped;
+}
+
+void drive()
+{
+  if (Success < Error) {
+
+    Serial.println("NN not Trained");
+  }
+  while (Error < Success) {
+
+    float TestInput[] = {0, 0, 0};
+
+    float sonarReading = vehicle.readSonarNormalized() / 100;
+
+    TestInput[0] = sonarReading;
+    //other inputs:
+    //TestInput[1] = float(LL2) / 100;
+
+    InputToOutput(TestInput[0]); //INPUT to ANN to obtain OUTPUT
+
+    int outputServoAngle = Output[0] * 100;
+    // int speedB = Output[1] * 100;
+
+    //speedA = int(speedA);
+    //speedB = int(speedB);
+
+    //do actions
+    //motorA(speedA);
+    vehicle.moveServo(outputServoAngle);
+    //motorB(speedB);
+    delay(50);
+  }
+}
+
+
+void InputToOutput(float input1)
+{
+  float TestInput[] = {0, 0, 0};
+  TestInput[0] = input1;
+
+  /***********************************
+    Compute hidden layer activations
+  ************************************/
+
+  for ( i = 0 ; i < HiddenNodes ; i++ ) {
+    Accum = HiddenWeights[InputNodes][i] ;
+    for ( j = 0 ; j < InputNodes ; j++ ) {
+      Accum += TestInput[j] * HiddenWeights[j][i] ;
+    }
+    Hidden[i] = 1.0 / (1.0 + exp(-Accum)) ;
+  }
+
+  /******************************************************************
+    Compute output layer activations and calculate errors
+  ******************************************************************/
+
+  for ( i = 0 ; i < OutputNodes ; i++ ) {
+    Accum = OutputWeights[HiddenNodes][i] ;
+    for ( j = 0 ; j < HiddenNodes ; j++ ) {
+      Accum += Hidden[j] * OutputWeights[j][i] ;
+    }
+    Output[i] = 1.0 / (1.0 + exp(-Accum)) ;
+  }
+
 }

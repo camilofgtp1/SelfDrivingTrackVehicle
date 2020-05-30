@@ -1,15 +1,15 @@
 
 void train() {
 
-  /******************************************************************
+  /****************
     Begin training
-  ******************************************************************/
+  ******************/
 
   for ( TrainingCycle = 1 ; TrainingCycle < 2147483647 ; TrainingCycle++) {
 
-    /******************************************************************
+    /**************************************
       Randomize order of training patterns
-    ******************************************************************/
+    **************************************/
 
     for ( p = 0 ; p < PatternCount ; p++) {
       q = random(PatternCount);
@@ -24,9 +24,9 @@ void train() {
     for ( q = 0 ; q < PatternCount ; q++ ) {
       p = RandomizedIndex[q];
 
-      /******************************************************************
+      /**********************************
         Compute hidden layer activations
-      ******************************************************************/
+      ***********************************/
 
       for ( i = 0 ; i < HiddenNodes ; i++ ) {
         Accum = HiddenWeights[InputNodes][i] ;
@@ -36,9 +36,9 @@ void train() {
         Hidden[i] = 1.0 / (1.0 + exp(-Accum)) ;
       }
 
-      /******************************************************************
+      /*******************************************************
         Compute output layer activations and calculate errors
-      ******************************************************************/
+      ********************************************************/
 
       for ( i = 0 ; i < OutputNodes ; i++ ) {
         Accum = OutputWeights[HiddenNodes][i] ;
@@ -50,9 +50,9 @@ void train() {
         Error += 0.5 * (Target[p][i] - Output[i]) * (Target[p][i] - Output[i]) ;
       }
 
-      /******************************************************************
+      /**************************************
         Backpropagate errors to hidden layer
-      ******************************************************************/
+      ***************************************/
 
       for ( i = 0 ; i < HiddenNodes ; i++ ) {
         Accum = 0.0 ;
@@ -62,10 +62,9 @@ void train() {
         HiddenDelta[i] = Accum * Hidden[i] * (1.0 - Hidden[i]) ;
       }
 
-
-      /******************************************************************
+      /*******************************
         Update Inner-->Hidden Weights
-      ******************************************************************/
+      ********************************/
 
 
       for ( i = 0 ; i < HiddenNodes ; i++ ) {
@@ -77,9 +76,9 @@ void train() {
         }
       }
 
-      /******************************************************************
+      /********************************
         Update Hidden-->Output Weights
-      ******************************************************************/
+      *********************************/
 
       for ( i = 0 ; i < OutputNodes ; i ++ ) {
         ChangeOutputWeights[HiddenNodes][i] = LearningRate * OutputDelta[i] + Momentum * ChangeOutputWeights[HiddenNodes][i] ;
@@ -91,9 +90,9 @@ void train() {
       }
     }
 
-    /******************************************************************
+    /*****************************************************
       Every 1000 cycles send data to terminal for display
-    ******************************************************************/
+    ******************************************************/
     ReportEvery1000 = ReportEvery1000 - 1;
     if (ReportEvery1000 == 0)
     {
@@ -126,9 +125,9 @@ void train() {
 }
 void initWeights() {
 
-  /******************************************************************
+  /**************************************************
     Initialize HiddenWeights and ChangeHiddenWeights
-  ******************************************************************/
+  ***************************************************/
 
   for ( i = 0 ; i < HiddenNodes ; i++ ) {
     for ( j = 0 ; j <= InputNodes ; j++ ) {
@@ -137,23 +136,20 @@ void initWeights() {
       HiddenWeights[j][i] = 2.0 * ( Rando - 0.5 ) * InitialWeightMax ;
     }
   }
-/******************************************************************
-* Initialize OutputWeights and ChangeOutputWeights
-******************************************************************/
+  /**************************************************
+    Initialize OutputWeights and ChangeOutputWeights
+  ***************************************************/
 
-  for( i = 0 ; i < OutputNodes ; i ++ ) {    
-    for( j = 0 ; j <= HiddenNodes ; j++ ) {
-      ChangeOutputWeights[j][i] = 0.0 ;  
-      Rando = float(random(100))/100;        
+  for ( i = 0 ; i < OutputNodes ; i ++ ) {
+    for ( j = 0 ; j <= HiddenNodes ; j++ ) {
+      ChangeOutputWeights[j][i] = 0.0 ;
+      Rando = float(random(100)) / 100;
       OutputWeights[j][i] = 2.0 * ( Rando - 0.5 ) * InitialWeightMax ;
     }
   }
   Serial.println("Initial/Untrained Outputs: ");
   toTerminal();
-
-  
 }
-
 
 void toTerminal()
 {
@@ -172,9 +168,9 @@ void toTerminal()
       Serial.print (Target[p][i], DEC);
       Serial.print (" ");
     }
-    /******************************************************************
+    /**********************************
       Compute hidden layer activations
-    ******************************************************************/
+    ***********************************/
 
     for ( i = 0 ; i < HiddenNodes ; i++ ) {
       Accum = HiddenWeights[InputNodes][i] ;
@@ -184,9 +180,9 @@ void toTerminal()
       Hidden[i] = 1.0 / (1.0 + exp(-Accum)) ;
     }
 
-    /******************************************************************
+    /******************************************************
       Compute output layer activations and calculate errors
-    ******************************************************************/
+    *******************************************************/
 
     for ( i = 0 ; i < OutputNodes ; i++ ) {
       Accum = OutputWeights[HiddenNodes][i] ;
@@ -201,6 +197,4 @@ void toTerminal()
       Serial.print (" ");
     }
   }
-
-
 }

@@ -29,14 +29,13 @@ int Vehicle::readSonarCms() {
 
 int Vehicle::readSonarNormalized() {
   return map(readSonarCms(), 3, MAX_DISTANCE, 0, 100);
-
 }
 
-void Vehicle::moveServo(int angle, int turningSpeed) {
+void Vehicle::moveServo(int angle) {
   int newAngle = map(angle, 0, 100, 0, 180);
   servo.attach(SERVO_PIN);
   servo.write(newAngle);
-  delay(turningSpeed);
+  delay(100);
   servo.detach();
 }
 
@@ -107,7 +106,7 @@ void Vehicle::fullStop() {
 
 //example of action
 //PWMLeft:0.2  | PWMRight: 0.7 | servo: 0.4
-void Vehicle::performActions(int action[8][8], int PatternCount, int OutputNodes ) {
+void Vehicle::performActions(float Target[8][8], int PatternCount, int OutputNodes ) {
   for (int i = 0; i < PatternCount; i++) {
     for (int j = 0; j < OutputNodes - 1; j++) {
       Serial.print("action (");
@@ -115,7 +114,7 @@ void Vehicle::performActions(int action[8][8], int PatternCount, int OutputNodes
       Serial.print(",");
       Serial.print(j);
       Serial.print(") = ");
-      Serial.println(action[i][j]);
+      Serial.println(Target[i][j]);
       delay(1000);
     }
   }
