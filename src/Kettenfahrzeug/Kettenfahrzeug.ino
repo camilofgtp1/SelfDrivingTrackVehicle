@@ -14,13 +14,13 @@ const float Success = 0.06;
 const int HiddenNodes = 3;
 const float LearningRate = 0.4;
 
-//Reference Input states, 
+//Reference Input states,
 // ultrasonicSensor: 0.0 to 1.0 | gyroZ: 0 is south, 0.5 is north, 0.25 is east, 0.75 is west
 float Input[PatternCount][InputNodes] = {
   {0.1, 0.1},   //01 close to obstacle, heading south
   {0.1, 0.5},   //02 close to obstacle, heading north
   {0.9, 0.1},   //07 far from obstacle, heading south
-  {0.9, 0.5}    //08 far from obstacle,  heading north};
+  {0.9, 0.5}    //08 far from obstacle, heading north
 };
 
 //Reference Outputs
@@ -67,45 +67,60 @@ void startMPU() {
 
 void setup() {
   Serial.begin(9600);
-
+  vehicle.runTestRoutine();
   // Initialization
   mpu.Initialize();
+  //testMPU();
 
   randomSeed(analogRead(3));
   ReportEvery1000 = 1;
   for ( p = 0 ; p < PatternCount ; p++ ) {
     RandomizedIndex[p] = p ;
   }
-  train();
-
+  //train();
 }
 
 void loop() {
-  initWeights();
-  Serial.println ();
-  Serial.println();
-  Serial.print ("TrainingCycle: ");
-  Serial.print (TrainingCycle);
-  Serial.print ("  Error = ");
-  Serial.println (Error, 5);
 
-  Serial.print(Error);
-  toTerminal();
+  /*
+    initWeights();
+    Serial.println ();
+    Serial.println();
+    Serial.print ("TrainingCycle: ");
+    Serial.print (TrainingCycle);
+    Serial.print ("  Error = ");
+    Serial.println (Error, 5);
 
-  Serial.println ();
-  Serial.println ();
-  Serial.println ("Training Set Solved! ");
-  Serial.println ("--------");
-  Serial.println ();
-  Serial.println ();
-  ReportEvery1000 = 1;
-  drive();
+    Serial.print(Error);
+    toTerminal();
+
+    Serial.println ();
+    Serial.println ();
+    Serial.println ("Training Set Solved! ");
+    Serial.println ("--------");
+    Serial.println ();
+    Serial.println ();
+    ReportEvery1000 = 1;
+    drive();
+  */
 }
 
 int mapZAxis() {
   mpu.Execute();
   int mapped = map(mpu.GetAngZ(), -179.9, 179.9, 0, 100);
   return mapped;
+}
+
+void testMPU() {
+  Serial.println("Testing MPU");
+  for (int i = 0; i < 10; i++) {
+    Serial.print("reading Z axis: ");
+    Serial.println(mapZAxis());
+    delay(1000);
+  }
+  Serial.println("Test finished");
+
+
 }
 
 
@@ -126,15 +141,15 @@ void drive()
     TestInput[0] = sonarReading;
     TestInput[1] = headingAngle;
 
-    /*
-        Serial.print("sonar: ");
-        Serial.print(TestInput[0]);
-        Serial.print("| servoAngle: ");
-        Serial.print(TestInput[1]);
-        Serial.print("| gyroZ: ");
-        Serial.print(TestInput[2]);
-        Serial.println();
-    */
+
+    Serial.print("sonar: ");
+    Serial.print(TestInput[0]);
+    Serial.print("| servoAngle: ");
+    Serial.print(TestInput[1]);
+    Serial.print("| gyroZ: ");
+    Serial.print(TestInput[2]);
+    Serial.println();
+
     InputToOutput(TestInput[0], TestInput[1]); //INPUT to ANN to obtain OUTPUT
 
     Serial.print("pwmLeft: ");
@@ -142,21 +157,18 @@ void drive()
     Serial.print("| pwmRight: ");
     Serial.print(Output[1]);
     Serial.println();
-    
-    //vehicle.drive((Output[0] * 100)+100, (Output[1] *100)+100);
 
- 
+    vehicle.drive((Output[0] * 100) + 100, (Output[1] * 100) + 100);
+
+
   }
 }
 
-
 void InputToOutput(float input0, float input1)
 {
-
   float TestInput[] = {0.0, 0.0};
   TestInput[0] = input0;
   TestInput[1] = input1;
-
 
   /***********************************
     Compute hidden layer activations
@@ -181,5 +193,4 @@ void InputToOutput(float input0, float input1)
     }
     Output[i] = 1.0 / (1.0 + exp(-Accum));
   }
-
 }
